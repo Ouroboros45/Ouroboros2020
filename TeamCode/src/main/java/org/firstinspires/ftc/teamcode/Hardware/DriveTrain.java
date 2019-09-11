@@ -12,6 +12,14 @@ public class DriveTrain {
     private static double inchCounts = (motorCounts / gearUp)
             / (wheelDiam * Math.PI);
 
+    public double power = 0;
+    public double error;
+    public double time;
+    public double prevTime = 0;
+    public double integral;
+    public double lastError = 0;
+    public double derive;
+
     private LinearOpMode opMode;
     private Sensors sensors;
 
@@ -55,10 +63,6 @@ public class DriveTrain {
             bl.setPower(-speed);
             br.setPower(speed);
         }
-    }
-
-    public void turnPID(double headingChange, double kP, double kI, double kD, boolean isRight, double timeoutS) {
-
     }
 
     public void resetEncoders() {
@@ -154,5 +158,30 @@ public class DriveTrain {
         bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
+    //double kP = 0.6/90;
+    //double kI = 0.0325;
+    //double kD = 0.2;
+
+    public void PIDTurn (double goal, double kP, double kI, double kD) {
+        runtime.reset();
+        sensors.angles = sensors.gyro.getAngularOrientation();
+        while ((goal - sensors.angles.firstAngle) > 1 && opMode.opModeIsActive()) {
+            sensors.angles = sensors.gyro.getAngularOrientation();
+            error = goal - sensors.angles.firstAngle;
+            time = runtime.milliseconds();
+            integral += (time - prevTime) * error;
+            derive = (error - lastError) / (time - prevTime);
+            power = kP * error + kI * integral + kD * derive;
+
+            fr.setPower(-power);
+            fl.setPower(-power);
+            br.setPower(-power);
+            bl.setPower(-power);
+            prevTime = runtime.milliseconds();
+            lastError = goal - sensors.angles.firstAngle;
+        }
+    }
+
 
 }
