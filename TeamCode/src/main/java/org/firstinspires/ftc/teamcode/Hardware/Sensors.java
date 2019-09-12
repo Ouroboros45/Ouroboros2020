@@ -10,9 +10,8 @@ public class Sensors {
 
     private LinearOpMode opMode;
     public BNO055IMU gyro;
-    private Orientation angles;
-    private BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-
+    public Orientation angles;
+    public BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
     public void initSensors(LinearOpMode opMode) {
 
