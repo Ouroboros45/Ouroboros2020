@@ -9,8 +9,7 @@ public class DriveTrain {
     private static double motorCounts = 1440;
     private static double gearUp = 1;
     private static double wheelDiam = 4;
-    private static double inchCounts = (motorCounts / gearUp)
-            / (wheelDiam * Math.PI);
+    private static double inchCounts = (motorCounts / gearUp) / (wheelDiam * Math.PI);
 
     public double power = 0;
     public double error;
@@ -23,12 +22,12 @@ public class DriveTrain {
     private LinearOpMode opMode;
     private Sensors sensors;
 
-    public ElapsedTime     runtime = new ElapsedTime();
+    public ElapsedTime runtime = new ElapsedTime();
 
-    public DcMotor fl;
-    public DcMotor fr;
-    public DcMotor bl;
-    public DcMotor br;
+    public DcMotor fl; //Front Left Motor
+    public DcMotor fr; //Front Right Motor
+    public DcMotor bl; //Back Left Motor
+    public DcMotor br; //Back Right Motor
 
     public void initDriveTrain(LinearOpMode opMode) {
         this.opMode = opMode;

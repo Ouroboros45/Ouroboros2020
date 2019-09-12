@@ -32,14 +32,16 @@ public class TeleOpMecanum extends LinearOpMode {
         double direction;
 
         while (opModeIsActive()) {
+
             telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
             telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
-            telemetry.addData("Motor Position", "Motor Rotation", +speed);
+            telemetry.addData("Motor Position", "Motor Rotation", + speed);
             telemetry.update();
+
             motorPos = drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
                     * drive.br.getCurrentPosition() / 4;
-            velocity = Math.hypot(gamepad1.right_stick_x, gamepad1.right_stick_y);
-            direction = Math.atan2(gamepad1.right_stick_y, -gamepad1.right_stick_x) - Math.PI / 4;
+            velocity = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
+            direction = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
 
             if (Math.abs(gamepad1.left_stick_y) > .05) {
                 leftStickY = gamepad1.left_stick_y;
@@ -55,23 +57,7 @@ public class TeleOpMecanum extends LinearOpMode {
                 leftStickX = 0;
             }
 
-            if (Math.abs(gamepad1.right_stick_y) > .05) {
-                rightStickY = gamepad1.right_stick_y;
-            }
-            else {
-                rightStickY = 0;
-            }
-
-            if (Math.abs(gamepad1.right_stick_x) > .05) {
-                rightStickX = gamepad1.right_stick_x;
-            }
-            else {
-                rightStickX = 0;
-            }
-
             if (gamepad1.right_bumper) {
-                rightStickX = rightStickX / 5;
-                rightStickY = rightStickY / 5;
                 leftStickX = leftStickX / 5;
                 leftStickY = leftStickY / 5;
             }
