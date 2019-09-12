@@ -25,10 +25,10 @@ public class DriveTrain {
 
     public ElapsedTime     runtime = new ElapsedTime();
 
-    private DcMotor fl;
-    private DcMotor fr;
-    private DcMotor bl;
-    private DcMotor br;
+    public DcMotor fl;
+    public DcMotor fr;
+    public DcMotor bl;
+    public DcMotor br;
 
     public void initDriveTrain(LinearOpMode opMode) {
         this.opMode = opMode;
