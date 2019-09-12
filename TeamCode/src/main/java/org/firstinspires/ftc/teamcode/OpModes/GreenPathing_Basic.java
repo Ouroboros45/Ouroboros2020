@@ -8,20 +8,22 @@ import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
-@Autonomous(name ="Basic Blue Green Pathing", group="Auto Basic")
+@Autonomous(name ="Basic Blue Green Path", group="Auto Basic")
 public class GreenPathing_Basic extends LinearOpMode {
 
+    private ElapsedTime runtime = new ElapsedTime();
     private double driveSpeed = 0.6;
+
     DriveTrain driveTrain= new DriveTrain();
     Sensors sensors = new Sensors();
     Intake intake = new Intake();
-    private ElapsedTime runtime = new ElapsedTime();
 
     @Override
     public void runOpMode() {
 
         driveTrain.initDriveTrain(this);
         driveTrain.resetEncoders();
+
         waitForStart();
 
         driveTrain.encoderDrive(driveSpeed,  96,  96, 96, 96, 4.0);

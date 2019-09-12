@@ -13,12 +13,13 @@ public class TeleOpMecanum extends OpMode {
     //Instantiate Variables
     DriveTrain drive = new DriveTrain();
 
-    int speed = 1;
     int motorPos = 0;
+    int speed = 1;
     double leftStickY;
     double leftStickX;
-    double velocity;
     double direction;
+    double velocity;
+
 
     //Initializes Method
     @Override

@@ -11,25 +11,26 @@ public class DriveTrain {
     private static double wheelDiam = 4;
     private static double inchCounts = (motorCounts / gearUp) / (wheelDiam * Math.PI);
 
-    public double power = 0;
-    public double error;
-    public double time;
-    public double prevTime = 0;
-    public double integral;
-    public double lastError = 0;
-    public double derive;
-
+    public ElapsedTime runtime = new ElapsedTime();
     private LinearOpMode opMode;
     private Sensors sensors;
-
-    public ElapsedTime runtime = new ElapsedTime();
 
     public DcMotor fl; //Front Left Motor
     public DcMotor fr; //Front Right Motor
     public DcMotor bl; //Back Left Motor
     public DcMotor br; //Back Right Motor
 
+    public double prevError = 0;
+    public double prevTime = 0;
+    public double power = 0;
+    public double integral;
+    public double derive;
+    public double error;
+    public double time;
+
+
     public void initDriveTrain(LinearOpMode opMode) {
+
         this.opMode = opMode;
         sensors = new Sensors();
 
@@ -45,21 +46,24 @@ public class DriveTrain {
         bl.setDirection(DcMotor.Direction.REVERSE);
         br.setDirection(DcMotor.Direction.FORWARD);
 
-        //add comments
+        //Set Power For Static Motors - When Robot Not Moving
         fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-
     }
 
+    //Making 90 Degree Turns
     public void turn(double speed, boolean isRight) {
+
         if (isRight) {
             fl.setPower(speed);
             fr.setPower(-speed);
             bl.setPower(speed);
             br.setPower(-speed);
-        } else {
+        }
+        else
+            {
             fl.setPower(-speed);
             fr.setPower(speed);
             bl.setPower(-speed);
@@ -67,26 +71,26 @@ public class DriveTrain {
         }
     }
 
+    //Method for Resetting Encoders
     public void resetEncoders() {
 
         opMode.telemetry.addData("Status", "Resetting Encoders");
         opMode.telemetry.update();
 
-        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        bl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        br.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        opMode.telemetry.addData("Path0", "Starting at %7d :%7d",
+        opMode.telemetry.addData("Path0", "Starting at %7d : %7d",
                 bl.getCurrentPosition(),
                 br.getCurrentPosition());
         opMode.telemetry.update();
-
     }
 
     public void encoderDrive(double speed,
@@ -103,6 +107,7 @@ public class DriveTrain {
             newRightTarget = fr.getCurrentPosition() + (int) (rightInches * inchCounts);
             newLeftBlarget = bl.getCurrentPosition() + (int) (leftBlinches * inchCounts);
             newRightBlarget = br.getCurrentPosition() + (int) (rightBlinches * inchCounts);
+
             fl.setTargetPosition(newLeftTarget);
             fr.setTargetPosition(newRightTarget);
             bl.setTargetPosition(newLeftBlarget);
@@ -114,6 +119,7 @@ public class DriveTrain {
             br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
             runtime.reset();
+
             fl.setPower(Math.abs(speed));
             fr.setPower(Math.abs(speed));
             bl.setPower(Math.abs(speed));
@@ -165,23 +171,29 @@ public class DriveTrain {
     //double kI = 0.0325;
     //double kD = 0.2;
 
-    public void PIDTurn (double goal, double kP, double kI, double kD) {
+    //PID Turns for Macanum Wheels
+    //Proportional Integral Derivative Turn
+    public void PIDTurn (double goal, double kP, double kI, double kD, double timeOutMS) {
+
         runtime.reset();
         sensors.angles = sensors.gyro.getAngularOrientation();
-        while ((goal - sensors.angles.firstAngle) > 1 && opMode.opModeIsActive()) {
+
+        while (opMode.opModeIsActive() && runtime.milliseconds() <= timeOutMS && goal - sensors.angles.firstAngle > 1 ) {
+
             sensors.angles = sensors.gyro.getAngularOrientation();
             error = goal - sensors.angles.firstAngle;
             time = runtime.milliseconds();
             integral += (time - prevTime) * error;
-            derive = (error - lastError) / (time - prevTime);
+            derive = (error - prevError) / (time - prevTime);
             power = kP * error + kI * integral + kD * derive;
 
             fr.setPower(-power);
             fl.setPower(-power);
-            br.setPower(-power);
-            bl.setPower(-power);
+            br.setPower(power);
+            bl.setPower(power);
+
             prevTime = runtime.milliseconds();
-            lastError = goal - sensors.angles.firstAngle;
+            prevError = goal - sensors.angles.firstAngle;
         }
     }
 
