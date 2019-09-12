@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
@@ -16,7 +15,9 @@ public class Sensors {
 
 
     public void initSensors(LinearOpMode opMode) {
+
         this.opMode = opMode;
+
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
@@ -30,14 +31,17 @@ public class Sensors {
     }
 
     public double getGyroYaw() {
+
         return angles.firstAngle;
     }
 
     public double getGyroPitch() {
+
         return angles.secondAngle;
     }
 
     public double getGyroRoll() {
+
         return angles.thirdAngle;
     }
 }
