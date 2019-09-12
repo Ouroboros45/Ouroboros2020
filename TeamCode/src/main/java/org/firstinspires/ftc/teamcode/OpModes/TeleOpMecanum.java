@@ -10,18 +10,17 @@ import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 @TeleOp(name="Arcade Drive", group="TeleOp")
 public class TeleOpMecanum extends OpMode {
 
-    //Define object instances and variables
+    //Instantiate Variables
     DriveTrain drive = new DriveTrain();
 
     int speed = 1;
+    int motorPos = 0;
     double leftStickY;
     double leftStickX;
-
-    int motorPos = 0;
     double velocity;
     double direction;
 
-    //init statement
+    //Initializes Method
     @Override
     public void init() {
 
@@ -32,7 +31,7 @@ public class TeleOpMecanum extends OpMode {
         drive.runtime.reset();
     }
 
-    //loops when played
+    //Main Loop
     @Override
     public void loop() {
 
@@ -41,17 +40,19 @@ public class TeleOpMecanum extends OpMode {
             telemetry.addData("Motor Position", "Motor Rotation", + speed);
             telemetry.update();
 
-            //gets current motor position
+            //Gets Motor Position By Taking Average From All Motors
             motorPos = drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
                     * drive.br.getCurrentPosition() / 4;
 
+            //Arcade Controls
+            //Latitudinal Direction
             if (Math.abs(gamepad1.left_stick_y) > .05) {
                 leftStickY = gamepad1.left_stick_y;
             }
             else {
                 leftStickY = 0;
             }
-
+            //Longitudinal Direction
             if (Math.abs(gamepad1.left_stick_x) > .05) {
                 leftStickX = gamepad1.left_stick_x;
             }
@@ -65,9 +66,12 @@ public class TeleOpMecanum extends OpMode {
                 leftStickY = leftStickY / 2;
             }
 
+            //Gets Magnitude of Left Stick
             velocity = Math.hypot(leftStickX, leftStickY);
+            //Gets Direction of Left Stick
             direction = Math.atan2(leftStickY, -leftStickX) - Math.PI / 4;
 
+            //Sets Power to Wheel
             drive.fl.setPower(velocity * Math.cos(direction) + speed);
             drive.fr.setPower(velocity * Math.sin(direction) - speed);
             drive.bl.setPower(velocity * Math.sin(direction) + speed);
