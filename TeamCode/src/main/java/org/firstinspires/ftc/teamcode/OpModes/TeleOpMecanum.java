@@ -1,13 +1,16 @@
+//Package statement
 package org.firstinspires.ftc.teamcode.OpModes;
 
+//import statements
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
+//TeleOp class identifier
 @TeleOp(name="Arcade Drive", group="TeleOp")
 public class TeleOpMecanum extends OpMode {
 
+    //Define object instances and variables
     DriveTrain drive = new DriveTrain();
 
     int speed = 1;
@@ -18,6 +21,7 @@ public class TeleOpMecanum extends OpMode {
     double velocity;
     double direction;
 
+    //init statement
     @Override
     public void init() {
 
@@ -25,10 +29,10 @@ public class TeleOpMecanum extends OpMode {
         telemetry.update();
 
         drive.resetEncoders();
-
         drive.runtime.reset();
     }
 
+    //loops when played
     @Override
     public void loop() {
 
@@ -37,10 +41,9 @@ public class TeleOpMecanum extends OpMode {
             telemetry.addData("Motor Position", "Motor Rotation", + speed);
             telemetry.update();
 
+            //gets current motor position
             motorPos = drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
                     * drive.br.getCurrentPosition() / 4;
-            velocity = Math.hypot(gamepad1.left_stick_x, gamepad1.left_stick_y);
-            direction = Math.atan2(gamepad1.left_stick_y, -gamepad1.left_stick_x) - Math.PI / 4;
 
             if (Math.abs(gamepad1.left_stick_y) > .05) {
                 leftStickY = gamepad1.left_stick_y;
@@ -56,13 +59,18 @@ public class TeleOpMecanum extends OpMode {
                 leftStickX = 0;
             }
 
+            //Speed Reducer
             if (gamepad1.right_bumper) {
-                leftStickX = leftStickX / 5;
-                leftStickY = leftStickY / 5;
+                leftStickX = leftStickX / 2;
+                leftStickY = leftStickY / 2;
             }
+
+            velocity = Math.hypot(leftStickX, leftStickY);
+            direction = Math.atan2(leftStickY, -leftStickX) - Math.PI / 4;
+
             drive.fl.setPower(velocity * Math.cos(direction) + speed);
             drive.fr.setPower(velocity * Math.sin(direction) - speed);
             drive.bl.setPower(velocity * Math.sin(direction) + speed);
             drive.br.setPower(velocity * Math.cos(direction) - speed);
-        }
     }
+}
