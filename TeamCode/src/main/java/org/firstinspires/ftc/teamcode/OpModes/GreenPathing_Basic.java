@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors;
 public class GreenPathing_Basic extends LinearOpMode {
 
     private double driveSpeed = 0.6;
-    DriveTrain driveTrain = new DriveTrain();
+    DriveTrain driveTrain= new DriveTrain();
     Sensors sensors = new Sensors();
     Intake intake = new Intake();
     private ElapsedTime runtime = new ElapsedTime();
