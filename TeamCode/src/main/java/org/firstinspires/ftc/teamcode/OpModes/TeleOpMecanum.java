@@ -1,37 +1,36 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
 @TeleOp(name="Arcade Drive", group="TeleOp")
-public class TeleOpMecanum extends LinearOpMode {
+public class TeleOpMecanum extends OpMode {
 
     DriveTrain drive = new DriveTrain();
 
     int speed = 1;
     double leftStickY;
     double leftStickX;
-    double rightStickX;
-    double rightStickY;
+
+    int motorPos = 0;
+    double velocity;
+    double direction;
 
     @Override
-    public void runOpMode() {
+    public void init() {
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         drive.resetEncoders();
 
-        waitForStart();
         drive.runtime.reset();
-        int motorPos = 0;
-        double speedLock = 0;
-        boolean changeable = true;
-        double velocity;
-        double direction;
+    }
 
-        while (opModeIsActive()) {
+    @Override
+    public void loop() {
 
             telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
             telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
@@ -67,7 +66,3 @@ public class TeleOpMecanum extends LinearOpMode {
             drive.br.setPower(velocity * Math.cos(direction) - speed);
         }
     }
-
-
-
-}
