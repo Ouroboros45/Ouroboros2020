@@ -14,11 +14,11 @@ public class TeleOpMecanum extends OpMode {
     DriveTrain drive = new DriveTrain();
 
     int motorPos = 0;
-    int speed = 1;
     double leftStickY;
     double leftStickX;
     double direction;
     double velocity;
+    double speed;
 
 
     //Initializes Method
@@ -80,6 +80,7 @@ public class TeleOpMecanum extends OpMode {
             velocity = Math.hypot(leftStickX, leftStickY);
             //Gets Direction of Left Stick
             direction = Math.atan2(leftStickY, -leftStickX) - Math.PI / 4;
+            speed = gamepad1.right_stick_x;
 
             //Sets Power to Wheel
             drive.fl.setPower(velocity * Math.cos(direction) + speed);
