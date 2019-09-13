@@ -67,6 +67,15 @@ public class TeleOpMecanum extends OpMode {
                 leftStickY = leftStickY / 2;
             }
 
+            //Foundation Moving Toggle
+            //Toggle sets speed such that the robot can move the fastest
+            //while moving the foundation and not dropping any blocks
+            //Takes into account the mass of the foundation and block stack
+            //and the friction of the floor
+
+
+
+
             //Gets Magnitude of Left Stick
             velocity = Math.hypot(leftStickX, leftStickY);
             //Gets Direction of Left Stick
