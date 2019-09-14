@@ -10,6 +10,8 @@ public class Intake {
     //Detects a block using vision - in OpClass
     //Activates Intake Motors after block found - to save power
 
+
+    // intake planetary motors
     DcMotor rightSide;
     DcMotor leftSide;
 
@@ -20,8 +22,8 @@ public class Intake {
         this.opMode = opMode;
         try
         {
-            rightSide = opMode.hardwareMap.dcMotor.get("right_motor");
-            leftSide = opMode.hardwareMap.dcMotor.get("left_motor");
+            rightSide = opMode.hardwareMap.dcMotor.get("Right Intake");
+            leftSide = opMode.hardwareMap.dcMotor.get("Left Intake");
             opMode.telemetry.addData("Success", "Intake Initialized");
             opMode.telemetry.update();
         } catch (Exception e)
@@ -32,6 +34,8 @@ public class Intake {
         }
         return true;
     }
+
+    //is to be called in OpMode
     public void compliantIntake()
     {
         //find out intake mechanism

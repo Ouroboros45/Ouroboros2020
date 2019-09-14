@@ -13,12 +13,24 @@ public class TeleOpMecanum extends OpMode {
     //Instantiate Variables
     DriveTrain drive = new DriveTrain();
 
+    //Variables for Arcade Drive
     int motorPos = 0;
     double leftStickY;
     double leftStickX;
     double direction;
     double velocity;
     double speed;
+
+    //Variables for Cruise Foundation Moving (CFM)
+    private static final double  massFoundation = 0.0;
+    private static final double massStone = 0.0;
+    double foundationForce = 0.0;
+    double maxCFM_Velocity = 0.0;
+    double frictionForce = 0.0;
+    double stoneForce = 0.0;
+    double distance = 0.0;
+
+    int numberStackedBlocks = 0;
 
 
     //Initializes Method
@@ -30,6 +42,10 @@ public class TeleOpMecanum extends OpMode {
 
         drive.resetEncoders();
         drive.runtime.reset();
+
+        distance = 0.0;
+        numberStackedBlocks = 0;
+
     }
 
     //Main Loop
@@ -72,7 +88,6 @@ public class TeleOpMecanum extends OpMode {
             //while moving the foundation and not dropping any blocks
             //Takes into account the mass of the foundation and block stack
             //and the friction of the floor
-
 
 
 

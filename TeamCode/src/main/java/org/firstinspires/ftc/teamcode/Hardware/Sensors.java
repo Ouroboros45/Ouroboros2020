@@ -27,6 +27,7 @@ public class Sensors {
 
         gyro = this.opMode.hardwareMap.get(BNO055IMU.class, "imu");
         gyro.initialize(parameters);
+
     }
 
     public double getGyroYaw() {
