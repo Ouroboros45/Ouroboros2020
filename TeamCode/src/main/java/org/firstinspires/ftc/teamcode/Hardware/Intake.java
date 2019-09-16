@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Intake {
 
@@ -16,6 +17,8 @@ public class Intake {
     DcMotor rightSide;
     DcMotor leftSide;
 
+    ElapsedTime time = new ElapsedTime();
+
     private LinearOpMode opMode;
 
     private static final double PICKUP = 1;
@@ -24,6 +27,8 @@ public class Intake {
     public boolean initIntake(OpMode opMode)
     {
         this.opMode = (LinearOpMode) opMode;
+        time.reset();
+
         try
         {
             rightSide = opMode.hardwareMap.dcMotor.get("Right Intake");
@@ -49,32 +54,29 @@ public class Intake {
     //is to be called in OpMode
     //once activated moves toward block and activates compliant wheels
     //blockFound set by vision
-    public void compliantIntake_Auto(boolean blockFound, double x_distance, double y_distance)
+    public void compliantIntake_Auto(double runTime, boolean blockFound, double x_distance, double y_distance)
     {
-        if(blockFound)
+        if(time.milliseconds() < runTime && blockFound) //runtime includes time needed for block to go through pass through
         {
-
             //activate intake
             rightSide.setPower(PICKUP);
             leftSide.setPower(PICKUP);
-
             //move toward block (x_distance, y_distance) - using vision
             //uses encoder drive
-
             opMode.telemetry.addData("Active", "Picking Up Block");
             opMode.telemetry.update();
-
-
         }else{
             rightSide.setPower(IDLE);
             leftSide.setPower(IDLE);
+            blockFound = false;
+            time.reset();
         }
         //find out intake mechanism
     }
 
     public void compliantIntake_TeleOp()
     {
-        if(opMode.gamepad1.x) //set gamepade button to x, could change
+        if(opMode.gamepad1.x) //set game pad button to x, could change
         {
             rightSide.setPower(PICKUP);
             leftSide.setPower(PICKUP);
