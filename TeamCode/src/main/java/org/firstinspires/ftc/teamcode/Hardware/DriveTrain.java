@@ -173,9 +173,8 @@ public class DriveTrain {
 
     //PID Turns for Macanum Wheels
     //Proportional Integral Derivative Turn
-    public void PIDTurn (double goal, double kP, double kI, double kD, double timeOutMS) {
-        //fix
-/*
+    public void turnPID (double goal, double kP, double kI, double kD, double timeOutMS) {
+
         runtime.reset();
         sensors.angles = sensors.gyro.getAngularOrientation();
 
@@ -198,7 +197,6 @@ public class DriveTrain {
 
 
         }
- */
     }
 
     public void snowWhite () {
