@@ -7,21 +7,24 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Intake {
 
-    //Compliant Wheel Intake
-    //-----------------------
-    //Detects a block using vision - in OpClass
-    //Activates Intake Motors after block found - to save power
+    /*
+    Compliant Wheel Intake
+    Includes Pass Through System
+    -------------------------------------------
+    Detects a block using vision - in OpClass
+    Activates Intake Motors after block found - to save power
+    */
 
-
-    // intake planetary motors
+    //intake planetary motors
     DcMotor rightSide;
     DcMotor leftSide;
 
     ElapsedTime time = new ElapsedTime();
+    DriveTrain driveTrain = new DriveTrain();
 
     private LinearOpMode opMode;
 
-    private static final double PICKUP = 1;
+    private static final double PICKUP = .6;
     private static final double IDLE = 0;
 
     public boolean initIntake(OpMode opMode)
@@ -52,31 +55,32 @@ public class Intake {
     }
 
     //is to be called in OpMode
-    //once activated moves toward block and activates compliant wheels
-    //blockFound set by vision
-    public void compliantIntake_Auto(double runTime, boolean blockFound, double x_distance, double y_distance)
+    public void compliantIntake_Auto(double runTime, double x_distance, double y_distance)
     {
-        if(time.milliseconds() < runTime && blockFound) //runtime includes time needed for block to go through pass through
-        {
-            //activate intake
-            rightSide.setPower(PICKUP);
-            leftSide.setPower(PICKUP);
-            //move toward block (x_distance, y_distance) - using vision
-            //uses encoder drive
-            opMode.telemetry.addData("Active", "Picking Up Block");
-            opMode.telemetry.update();
-        }else{
-            rightSide.setPower(IDLE);
-            leftSide.setPower(IDLE);
-            blockFound = false;
-            time.reset();
+        time.reset();
+
+        opMode.telemetry.addData("Active", "Intake Running");
+        opMode.telemetry.update();
+
+        //move to block?
+        rightSide.setPower(PICKUP);
+        leftSide.setPower(PICKUP);
+
+        while(time.seconds() < runTime){ //runtime is time it takes for intake to run and pass through
+
         }
-        //find out intake mechanism
+
+        rightSide.setPower(IDLE);
+        leftSide.setPower(IDLE);
+
+        opMode.telemetry.addData("Inactive", "Intake Off");
+        opMode.telemetry.update();
+
     }
 
     public void compliantIntake_TeleOp()
     {
-        if(opMode.gamepad1.x) //set game pad button to x, could change
+        if(opMode.gamepad2.x) //set game pad button to x, could change, survey people
         {
             rightSide.setPower(PICKUP);
             leftSide.setPower(PICKUP);

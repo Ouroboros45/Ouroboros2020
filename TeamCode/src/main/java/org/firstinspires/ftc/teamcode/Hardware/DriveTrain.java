@@ -97,13 +97,15 @@ public class DriveTrain {
     public void encoderDrive(double speed,
                              double leftBlinches, double leftInches, double rightInches, double rightBlinches,
                              double timeoutS) {
+
+        double headingTarget = sensors.getGyroYaw();
+
         int newLeftTarget;
         int newRightTarget;
         int newRightBlarget;
         int newLeftBlarget;
 
         if (opMode.opModeIsActive()) {
-
             newLeftTarget = fl.getCurrentPosition() + (int) (leftInches * inchCounts);
             newRightTarget = fr.getCurrentPosition() + (int) (rightInches * inchCounts);
             newLeftBlarget = bl.getCurrentPosition() + (int) (leftBlinches * inchCounts);

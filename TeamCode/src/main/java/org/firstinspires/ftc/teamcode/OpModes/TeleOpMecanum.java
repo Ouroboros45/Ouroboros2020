@@ -64,8 +64,8 @@ public class TeleOpMecanum extends OpMode {
             telemetry.update();
 
             //Gets Motor Position By Taking Average From All Motors
-            motorPos = drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
-                    * drive.br.getCurrentPosition() / 4;
+            motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
+                    * drive.br.getCurrentPosition()) / 4;
 
             //Arcade Controls
             //Latitudinal Direction
