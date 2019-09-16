@@ -187,7 +187,7 @@ public class DriveTrain {
             proportional = error * kP;
             time = runtime.milliseconds();
             integral += ((time - prevTime) * error) * kI;
-            derive = ((error - prevError) / (time - prevTime)) * kP;
+            derive = ((error - prevError) / (time - prevTime)) * kD;
             power = proportional + integral + derive;
 
             fr.setPower(-power);
