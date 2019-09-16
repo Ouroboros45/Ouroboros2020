@@ -25,6 +25,7 @@ public class DriveTrain {
     public double power = 0;
     public double integral;
     public double derive;
+    public double proportional;
     public double error;
     public double time;
 
@@ -181,11 +182,13 @@ public class DriveTrain {
         while (opMode.opModeIsActive() && runtime.milliseconds() <= timeOutMS && goal - sensors.angles.firstAngle > 1 ) {
 
             sensors.angles = sensors.gyro.getAngularOrientation();
+
             error = goal - sensors.angles.firstAngle;
+            proportional = error * kP;
             time = runtime.milliseconds();
-            integral += (time - prevTime) * error;
-            derive = (error - prevError) / (time - prevTime);
-            power = kP * error + kI * integral + kD * derive;
+            integral += ((time - prevTime) * error) * kI;
+            derive = ((error - prevError) / (time - prevTime)) * kP;
+            power = proportional + integral + derive;
 
             fr.setPower(-power);
             fl.setPower(-power);
