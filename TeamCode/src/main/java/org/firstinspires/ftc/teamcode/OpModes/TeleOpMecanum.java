@@ -2,9 +2,12 @@
 package org.firstinspires.ftc.teamcode.OpModes;
 
 //import statements
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
+import org.firstinspires.ftc.teamcode.Hardware.Intake;
 
 //TeleOp class identifier
 @TeleOp(name="Arcade Drive", group="TeleOp")
@@ -12,6 +15,7 @@ public class TeleOpMecanum extends OpMode {
 
     //Instantiate Variables
     DriveTrain drive = new DriveTrain();
+    Intake intake = new Intake();
 
     //Variables for Arcade Drive
     int motorPos = 0;
@@ -42,6 +46,8 @@ public class TeleOpMecanum extends OpMode {
 
         drive.resetEncoders();
         drive.runtime.reset();
+
+        intake.initIntake(this);
 
         distance = 0.0;
         numberStackedBlocks = 0;
@@ -102,5 +108,8 @@ public class TeleOpMecanum extends OpMode {
             drive.fr.setPower(velocity * Math.sin(direction) - speed);
             drive.bl.setPower(velocity * Math.sin(direction) + speed);
             drive.br.setPower(velocity * Math.cos(direction) - speed);
+
+            //Intake
+            intake.compliantIntake_TeleOp();
     }
 }

@@ -23,6 +23,7 @@ public class GreenPathing_Basic extends LinearOpMode {
 
         driveTrain.initDriveTrain(this);
         driveTrain.resetEncoders();
+        intake.initIntake(this);
 
         waitForStart();
 
