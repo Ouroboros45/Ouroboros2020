@@ -174,7 +174,7 @@ public class DriveTrain {
 
     //PID Turns for Macanum Wheels
     //Proportional Integral Derivative Turn
-    public void turnPID (double goal, double kP, double kI, double kD, double timeOutMS) {
+    public void turnPID (double goal, boolean isRight, double kP, double kI, double kD, double timeOutMS) {
 
         runtime.reset();
         sensors.angles = sensors.gyro.getAngularOrientation();
@@ -190,10 +190,7 @@ public class DriveTrain {
             derive = ((error - prevError) / (time - prevTime)) * kD;
             power = proportional + integral + derive;
 
-            fr.setPower(-power);
-            fl.setPower(-power);
-            br.setPower(power);
-            bl.setPower(power);
+            turn(power, isRight);
 
             prevTime = runtime.milliseconds();
             prevError = goal - sensors.getGyroYaw();
