@@ -24,6 +24,8 @@ public class TeleOpMecanum extends OpMode {
     double direction;
     double velocity;
     double speed;
+    double speedHalver;
+    boolean halfTrue = false;
 
     //Variables for Cruise Foundation Moving (CFM)
     private static final double  massFoundation = 0.0;
@@ -84,10 +86,11 @@ public class TeleOpMecanum extends OpMode {
             }
 
             //Speed Reducer
-            if (gamepad1.right_bumper) {
-                leftStickX = leftStickX / 2;
-                leftStickY = leftStickY / 2;
-            }
+            if (gamepad1.right_bumper && !halfTrue) {
+                speedHalver = .5;
+            } else if (gamepad1.right_bumper && !halfTrue){
+                speedHalver = 1;
+        }
 
             //Foundation Moving Toggle
             //Toggle sets speed such that the robot can move the fastest
@@ -104,10 +107,10 @@ public class TeleOpMecanum extends OpMode {
             speed = gamepad1.right_stick_x;
 
             //Sets Power to Wheel
-            drive.fl.setPower(velocity * Math.cos(direction) + speed);
-            drive.fr.setPower(velocity * Math.sin(direction) - speed);
-            drive.bl.setPower(velocity * Math.sin(direction) + speed);
-            drive.br.setPower(velocity * Math.cos(direction) - speed);
+            drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedHalver);
+            drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedHalver);
+            drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedHalver);
+            drive.br.setPower((velocity * Math.cos(direction) - speed) * speedHalver);
 
             //Intake
             intake.compliantIntake_TeleOp();
