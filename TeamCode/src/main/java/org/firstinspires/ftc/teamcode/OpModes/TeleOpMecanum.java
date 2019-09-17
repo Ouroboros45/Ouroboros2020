@@ -31,10 +31,10 @@ public class TeleOpMecanum extends OpMode {
     private static final double  massFoundation = 0.0;
     private static final double massStone = 0.0;
     double foundationForce = 0.0;
-    double maxCFM_Velocity = 0.0;
     double frictionForce = 0.0;
     double stoneForce = 0.0;
     double distance = 0.0;
+    double maxCFM_Velocity = 0.0;
 
     int numberStackedBlocks = 0;
 
@@ -97,6 +97,19 @@ public class TeleOpMecanum extends OpMode {
             //while moving the foundation and not dropping any blocks
             //Takes into account the mass of the foundation and block stack
             //and the friction of the floor
+
+            if(gamepad2.dpad_up)
+            {
+                numberStackedBlocks++;
+            }
+
+            if(gamepad2.dpad_down)
+            {
+                numberStackedBlocks--;
+            }
+
+            maxCFM_Velocity = Math.sqrt(2 * distance * ((foundationForce + frictionForce + stoneForce * numberStackedBlocks)
+                    / (massFoundation + massStone * numberStackedBlocks)));
 
 
 

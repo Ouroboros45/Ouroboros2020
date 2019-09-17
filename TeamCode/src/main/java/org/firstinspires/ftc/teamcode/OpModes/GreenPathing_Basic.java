@@ -28,7 +28,9 @@ public class GreenPathing_Basic extends LinearOpMode {
         waitForStart();
 
         driveTrain.encoderDrive(driveSpeed,  96,  96, 96, 96, 4.0);
-        //pickup
+
+        intake.compliantIntake_Auto(1);
+
         driveTrain.encoderDrive(driveSpeed, -48, -48, -48, -48, 3.0);
         driveTrain.encoderDrive(driveSpeed,144, -144, -144, 144, 5.0);
         driveTrain.encoderDrive(driveSpeed,-96, 96, 96, -96, 5.0);
