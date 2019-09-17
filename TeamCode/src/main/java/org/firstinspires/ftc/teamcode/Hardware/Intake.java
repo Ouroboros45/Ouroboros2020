@@ -55,7 +55,7 @@ public class Intake {
     }
 
     //is to be called in OpMode
-    public void compliantIntake_Auto(double runTime, double x_distance, double y_distance)
+    public void compliantIntake_Auto(double runTime)
     {
         time.reset();
 
@@ -70,11 +70,11 @@ public class Intake {
         while(time.seconds() < runTime){ //runtime is time it takes for intake to run and pass through
 
         }
+
         driveTrain.encoderDrive(.5, -10, -10, -10, -10, 2);
+
         rightSide.setPower(IDLE);
         leftSide.setPower(IDLE);
-
-
 
         opMode.telemetry.addData("Inactive", "Intake Off");
         opMode.telemetry.update();
