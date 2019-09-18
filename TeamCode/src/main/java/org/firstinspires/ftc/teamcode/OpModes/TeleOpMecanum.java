@@ -33,7 +33,7 @@ public class TeleOpMecanum extends OpMode {
     double foundationForce = 0.0;
     double frictionForce = 0.0;
     double stoneForce = 0.0;
-    double distance = 0.0;
+    double distance = .25;
     double maxCFM_Velocity = 0.0;
 
     int numberStackedBlocks = 0;

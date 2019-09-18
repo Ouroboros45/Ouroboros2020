@@ -71,6 +71,7 @@ public class Intake {
 
         }
 
+        //move toward block
         driveTrain.encoderDrive(.5, -10, -10, -10, -10, 2);
 
         rightSide.setPower(IDLE);
