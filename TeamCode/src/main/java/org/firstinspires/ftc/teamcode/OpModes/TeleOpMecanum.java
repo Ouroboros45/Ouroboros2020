@@ -88,7 +88,7 @@ public class TeleOpMecanum extends OpMode {
             //Speed Reducer
             if (gamepad1.right_bumper && !halfTrue) {
                 speedHalver = .5;
-            } else if (gamepad1.right_bumper && !halfTrue){
+            } else if (gamepad1.right_bumper && halfTrue){
                 speedHalver = 1;
         }
 
