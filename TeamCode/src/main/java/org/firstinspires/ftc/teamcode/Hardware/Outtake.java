@@ -2,14 +2,15 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Outtake {
 
     Servo openBasket;
-    Servo rightSideY;
-    Servo leftSideY;
+    CRServo rightSideY;
+    CRServo leftSideY;
 
     LinearOpMode opMode;
     ElapsedTime time = new ElapsedTime();
@@ -23,8 +24,8 @@ public class Outtake {
         try
         {
             openBasket = opMode.hardwareMap.servo.get("Open Basket");
-            rightSideY = opMode.hardwareMap.servo.get("Right Outtake");
-            leftSideY = opMode.hardwareMap.servo.get("Left Outtake");
+            rightSideY = opMode.hardwareMap.crservo.get("Right Outtake");
+            leftSideY = opMode.hardwareMap.crservo.get("Left Outtake");
 
             opMode.telemetry.addData("Success", "Outtake Initialized");
             opMode.telemetry.update();
