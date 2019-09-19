@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors;
 
 @Autonomous(name ="Basic Blue Green Path", group="Auto Basic")
@@ -17,19 +18,22 @@ public class GreenPathing_Basic extends LinearOpMode {
     DriveTrain driveTrain= new DriveTrain();
     Sensors sensors = new Sensors();
     Intake intake = new Intake();
+    Outtake outtake = new Outtake();
 
     @Override
     public void runOpMode() {
 
         driveTrain.initDriveTrain(this);
         driveTrain.resetEncoders();
+
         intake.initIntake(this);
+        outtake.initOutPut(this);
 
         waitForStart();
 
         driveTrain.encoderDrive(driveSpeed,  96,  96, 96, 96, 4.0);
 
-        intake.compliantIntake_Auto(1);
+        intake.compliantIntake_Auto(1, true);
 
         driveTrain.encoderDrive(driveSpeed, -48, -48, -48, -48, 3.0);
         driveTrain.encoderDrive(driveSpeed,144, -144, -144, 144, 5.0);

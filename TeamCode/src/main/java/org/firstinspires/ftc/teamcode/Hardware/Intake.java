@@ -55,7 +55,7 @@ public class Intake {
     }
 
     //is to be called in OpMode
-    public void compliantIntake_Auto(double runTime)
+    public void compliantIntake_Auto(double runTime, boolean block)
     {
         time.reset();
 
@@ -67,10 +67,11 @@ public class Intake {
         rightSide.setPower(PICKUP);
         leftSide.setPower(PICKUP);
 
-        while(time.seconds() < runTime){ //runtime is time it takes for intake to run and pass through
+        while(time.seconds() < runTime && block){ //runtime is time it takes for intake to run and pass through
 
         }
 
+        //move toward block
         driveTrain.encoderDrive(.5, -10, -10, -10, -10, 2);
 
         rightSide.setPower(IDLE);
