@@ -39,10 +39,12 @@ public class TeleOpMecanum extends OpMode {
 
     private static final double  massFoundation = 1.905; // Mass in kg
     private static final double massStone = .1882;
-    double mu = 2.00;
+    static final double muBlocks = .78;
+    static final double muMat = .535;
     double fix = 1.0;
-    double distance = .25;
+    double distance = .1;
     double mass = 0.0;
+    double foundationFriction = 0.0;
     double maxCFM_Velocity = 0.0;
 
     int numberStackedBlocks = 0;
@@ -119,7 +121,10 @@ public class TeleOpMecanum extends OpMode {
             }
 
             mass = massFoundation + numberStackedBlocks * massStone;
-            maxCFM_Velocity = fix * Math.sqrt((distance * massStone * (numberStackedBlocks + 1) * 9.81 * mu) / mass);
+            maxCFM_Velocity = fix * Math.sqrt(2 * distance * ((massStone * (numberStackedBlocks + 1) * 9.81 * muBlocks)) / mass);
+
+            telemetry.addData("Number of Blocks : ", numberStackedBlocks);
+            telemetry.update();
 
             //set up power conversion
             //set up toggle

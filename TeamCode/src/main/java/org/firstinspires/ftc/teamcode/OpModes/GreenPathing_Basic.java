@@ -43,7 +43,7 @@ public class GreenPathing_Basic extends LinearOpMode {
         driveTrain.resetEncoders();
 
         intake.initIntake(this);
-        outtake.initOutPut(this);
+        outtake.initOuttake(this);
         initVuforia();
         waitForStart();
 
@@ -70,6 +70,7 @@ public class GreenPathing_Basic extends LinearOpMode {
 
                 break;
         }
+
         intake.compliantIntake_Auto(1, true);
 
         driveTrain.encoderDrive(driveSpeed, -48, -48, -48, -48, 3.0);
