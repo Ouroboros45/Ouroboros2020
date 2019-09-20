@@ -18,22 +18,22 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.ArrayList;
 import java.util.List;
 
-@Autonomous(name="Vuforia Testing", group ="Concept")
-public class Vuforia extends LinearOpMode {
+@Autonomous(name="VuforiaTesting Testing", group ="Concept")
+public class VuforiaTesting extends LinearOpMode {
 
-    public static final String TAG = "Vuforia Navigation Sample";
+    public static final String TAG = "VuforiaTesting Navigation Sample";
 
     OpenGLMatrix lastLocation = null;
 
     /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * {@link #vuforia} is the variable we will use to store our instance of the VuforiaTesting
      * localization engine.
      */
     VuforiaLocalizer vuforia;
 
     @Override public void runOpMode() {
         /*
-         * To start up Vuforia, tell it the view that we wish to use for camera monitor (on the RC phone);
+         * To start up VuforiaTesting, tell it the view that we wish to use for camera monitor (on the RC phone);
          * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
          */
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -50,7 +50,7 @@ public class Vuforia extends LinearOpMode {
          * Load the data sets that for the trackable objects we wish to track. These particular data
          * sets are stored in the 'assets' part of our application (you'll see them in the Android
          * Studio 'Project' view over there on the left of the screen). You can make your own datasets
-         * with the Vuforia Target Manager: https://developer.vuforia.com/target-manager. PDFs for the
+         * with the VuforiaTesting Target Manager: https://developer.vuforia.com/target-manager. PDFs for the
          * example "StonesAndChips", datasets can be found in in this project in the
          * documentation directory.
          */
