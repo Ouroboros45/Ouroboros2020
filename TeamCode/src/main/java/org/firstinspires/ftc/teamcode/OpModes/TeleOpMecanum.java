@@ -27,13 +27,20 @@ public class TeleOpMecanum extends OpMode {
     double speedHalver;
     boolean halfTrue = false;
 
-    //Variables for Cruise Foundation Moving (CFM)
-    private static final double  massFoundation = 0.0;
-    private static final double massStone = 0.0;
-    double foundationForce = 0.0;
-    double frictionForce = 0.0;
-    double stoneForce = 0.0;
+    //  Variables for Cruise Foundation Moving (CFM)
+    //  mu = Approximated Static Coefficient of Friction
+    //  fix = A fixing constant
+    // distance = distance traveled by robot while moving foundation
+    //  mass = mass of the foundation + mass of the blocks
+    // numberStackedBlocks = number of blocks stacked on top of one another
+    //  maxCFM_Velocity = Max velocity foundation with blocks can move before dropping blocks
+
+    private static final double  massFoundation = 1.905; // Mass in kg
+    private static final double massStone = .1882;
+    double mu = 2.00;
+    double fix = 1.0;
     double distance = .25;
+    double mass = 0.0;
     double maxCFM_Velocity = 0.0;
 
     int numberStackedBlocks = 0;
@@ -108,9 +115,8 @@ public class TeleOpMecanum extends OpMode {
                 numberStackedBlocks--;
             }
 
-            maxCFM_Velocity = Math.sqrt(2 * distance * ((foundationForce + frictionForce + stoneForce * numberStackedBlocks)
-                    / (massFoundation + massStone * numberStackedBlocks)));
-
+            mass = massFoundation + numberStackedBlocks * massStone;
+            maxCFM_Velocity = fix * Math.sqrt((distance * massStone * (numberStackedBlocks + 1) * 9.81 * mu) / mass);
 
 
             //Gets Magnitude of Left Stick

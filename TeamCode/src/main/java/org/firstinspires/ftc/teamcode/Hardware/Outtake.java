@@ -15,7 +15,6 @@ public class Outtake {
     LinearOpMode opMode;
     ElapsedTime time = new ElapsedTime();
 
-
     public boolean initOutPut(OpMode opMode)
     {
         this.opMode = (LinearOpMode) opMode;
