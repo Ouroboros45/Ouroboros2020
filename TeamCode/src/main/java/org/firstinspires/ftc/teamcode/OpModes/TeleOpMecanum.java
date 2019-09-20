@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 //TeleOp class identifier
 @TeleOp(name="Arcade Drive", group="TeleOp")
@@ -16,6 +17,7 @@ public class TeleOpMecanum extends OpMode {
     //Instantiate Variables
     DriveTrain drive = new DriveTrain();
     Intake intake = new Intake();
+    Outtake outtake = new Outtake();
 
     //Variables for Arcade Drive
     int motorPos = 0;
@@ -57,6 +59,7 @@ public class TeleOpMecanum extends OpMode {
         drive.runtime.reset();
 
         intake.initIntake(this);
+        outtake.initOuttake(this);
 
         distance = 0.0;
         numberStackedBlocks = 0;
@@ -117,6 +120,9 @@ public class TeleOpMecanum extends OpMode {
 
             mass = massFoundation + numberStackedBlocks * massStone;
             maxCFM_Velocity = fix * Math.sqrt((distance * massStone * (numberStackedBlocks + 1) * 9.81 * mu) / mass);
+
+            //set up power conversion
+            //set up toggle
 
 
             //Gets Magnitude of Left Stick
