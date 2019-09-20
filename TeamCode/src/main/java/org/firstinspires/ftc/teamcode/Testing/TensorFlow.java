@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
+ * IMPORTANT: In order to use this OpMode, you need to obtain your own VuforiaTesting license key as
  * is explained below.
  */
 @TeleOp(name = "Concept: TensorFlow Object Detection", group = "Concept")
@@ -29,22 +29,22 @@ public class TensorFlow extends LinearOpMode {
     private static final String LABEL_SECOND_ELEMENT = "Skystone";
 
     /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
+     * IMPORTANT: You need to obtain your own license key to use VuforiaTesting. The string below with which
      * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
+     * A VuforiaTesting 'Development' license key, can be obtained free of charge from the VuforiaTesting developer
      * web site at https://developer.vuforia.com/license-manager.
      *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
+     * VuforiaTesting license keys are always 380 characters long, and look as if they contain mostly
      * random data. As an example, here is a example of a fragment of a valid key:
      *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
+     * Once you've obtained a license key, copy the string from the VuforiaTesting web site
      * and paste it in to your code on the next line, between the double quotes.
      */
     private static final String VUFORIA_KEY =
             "AdzMYbL/////AAABmflzIV+frU0RltL/ML+2uAZXgJiIWerfe92N/AeH7QsWCOQqyKa2G+tUDcgvg8uE8QjHeBZPcpf5hAwlC5qCfvg76eBoaa2bMMZ73hmTiHmr9fj3XmF4LWWZtDC6pWTFrzRAUguhlvgnck6Y4jjM16Px5TqgWYuWnpcxNMHMyOXdnHLlyysyE64PVzoN7hgMXgbi2K8+pmTXvpV2OeLCag8fAj1Tgdm/kKGr0TX86aQsC2RVjToZXr9QyAeyODi4l1KEFmGwxEoteNU8yqNbBGkPXGh/+IIm6/s/KxCJegg8qhxZDgO8110FRzwA5a6EltfxAMmtO0G8BB9SSkApxkcSzpyI0k2LxWof2YZG6x4H";
 
     /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
+     * {@link #vuforia} is the variable we will use to store our instance of the VuforiaTesting
      * localization engine.
      */
     private VuforiaLocalizer vuforia;
@@ -110,18 +110,18 @@ public class TensorFlow extends LinearOpMode {
     }
 
     /**
-     * Initialize the Vuforia localization engine.
+     * Initialize the VuforiaTesting localization engine.
      */
     private void initVuforia() {
         /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         * Configure VuforiaTesting by creating a Parameter object, and passing it to the VuforiaTesting engine.
          */
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
 
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
         parameters.cameraDirection = CameraDirection.BACK;
 
-        //  Instantiate the Vuforia engine
+        //  Instantiate the VuforiaTesting engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
 
         // Loading trackables is not necessary for the TensorFlow Object Detection engine.
