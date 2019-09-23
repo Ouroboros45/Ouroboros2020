@@ -26,8 +26,9 @@ public class TeleOpMecanum extends OpMode {
     double direction;
     double velocity;
     double speed;
-    double speedHalver;
+    double speedProp;
     boolean halfTrue = false;
+    boolean cfmToggle = false;
 
     //  Variables for Cruise Foundation Moving (CFM)
     //  mu = Approximated Static Coefficient of Friction
@@ -99,10 +100,10 @@ public class TeleOpMecanum extends OpMode {
 
             //Speed Reducer
             if (gamepad1.right_bumper && !halfTrue) {
-                speedHalver = .5;
+                speedProp = .5;
             } else if (gamepad1.right_bumper && halfTrue){
-                speedHalver = 1;
-        }
+                speedProp = 1;
+            }
 
             //Foundation Moving Toggle
             //Toggle sets speed such that the robot can move the fastest
@@ -129,6 +130,18 @@ public class TeleOpMecanum extends OpMode {
             //set up power conversion
             //set up toggle
 
+            if(gamepad1.b && !cfmToggle)
+            {
+                //set speedProm to cfm
+                cfmToggle = true;
+            }
+            else if(gamepad1.b && cfmToggle)
+            {
+                //set power to normal
+                cfmToggle = false;
+            }
+
+
 
             //Gets Magnitude of Left Stick
             velocity = Math.hypot(leftStickX, leftStickY);
@@ -137,10 +150,10 @@ public class TeleOpMecanum extends OpMode {
             speed = gamepad1.right_stick_x;
 
             //Sets Power to Wheel
-            drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedHalver);
-            drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedHalver);
-            drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedHalver);
-            drive.br.setPower((velocity * Math.cos(direction) - speed) * speedHalver);
+            drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
+            drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
+            drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
+            drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
 
             //Intake
             intake.compliantIntake_TeleOp();

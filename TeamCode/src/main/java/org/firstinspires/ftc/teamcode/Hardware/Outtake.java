@@ -52,5 +52,26 @@ public class Outtake {
     }
 
 
+    //  x_coord - robot moves side to side along x axis
+    // y_coord - robot moves output system forward and backwards using CRservos
+    // z_coord - robot lift moves up and down using Lift DcMotors
+    // once coordinates placed into method robot auto aligns the whole output system to
+    // drop the block off on at the right spot
+    public void outTake_Auto (double x_coord, double y_coord, double z_coord)
+    {
 
+    }
+
+    // contains button to move the lift along the y and z plane
+    // gamepad two
+    public void outTake_TeleOp()
+    {
+
+    }
+
+    //  opens up the output basket using the Servos
+    public void dropItem()
+    {
+
+    }
 }
