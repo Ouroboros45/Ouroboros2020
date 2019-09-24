@@ -165,5 +165,8 @@ public class TeleOpMecanum extends OpMode {
 
             //Intake
             intake.compliantIntake_TeleOp();
+
+            //Outtake
+            outtake.outTake_TeleOp();
     }
 }

@@ -27,6 +27,8 @@ public class Outtake {
 
     double liftPower = 1;
 
+    double k = 1.0;
+
     public boolean initOuttake(OpMode opMode)
     {
         this.opMode = (LinearOpMode) opMode;
@@ -35,6 +37,8 @@ public class Outtake {
         top = false;
         bottom = false;
         blockInLift = false;
+
+        k = 1.0;
 
         try
         {
@@ -87,16 +91,16 @@ public class Outtake {
         {
             // move lift up
 
-            liftRight.setPower(liftPower);
-            liftLeft.setPower(liftPower);
+            liftRight.setPower(liftPower * k);
+            liftLeft.setPower(liftPower * k);
 
         }
         else if(opMode.gamepad2.dpad_down && !bottom)
         {
             // move lift down
 
-            liftRight.setPower(-liftPower);
-            liftLeft.setPower(-liftPower);
+            liftRight.setPower(-liftPower * k);
+            liftLeft.setPower(-liftPower * k);
         }
         else
         {
@@ -114,6 +118,22 @@ public class Outtake {
         {
             resetOuttake();
         }
+
+
+        // lift proportional changing, for precision placement
+
+
+        if(opMode.gamepad2.dpad_left)
+        {
+            k -= .1;
+        }
+        else if(opMode.gamepad2.dpad_right)
+        {
+            k += .1;
+        }
+
+        opMode.telemetry.addData("Lift Power", k);
+        opMode.telemetry.update();
     }
 
     //  opens up the output basket using the Servos
@@ -141,10 +161,7 @@ public class Outtake {
     {
         time.reset();
 
-        pushBlock.setPosition(0);
-
-        top = false;
-        bottom = true;
+        pushBlock.setPosition(0); // moves servo to open position what ever angle that is
 
         rightSideY.setPower(-1);
         leftSideY.setPower(-1);
@@ -154,6 +171,17 @@ public class Outtake {
 
         }
 
+        rightSideY.setPower(0);
+        leftSideY.setPower(0);
+
+        while(!bottom) // once lift registers to bottom then bottom will equal to true
+        {
+            liftLeft.setPower(-liftPower);
+            liftRight.setPower(-liftPower);
+        }
+
+        top = false;
+        bottom = true;
 
     }
 
