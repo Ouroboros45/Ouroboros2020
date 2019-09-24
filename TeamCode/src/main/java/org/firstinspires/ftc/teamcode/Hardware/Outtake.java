@@ -25,9 +25,13 @@ public class Outtake {
 
     static final double liftExtensionTime = 1000; // Time it takes for lift to extend out
 
+    static final double encoderLevelCount = (1800.61842251 / Math.PI) ;
+
     double liftPower = 1;
 
     double k = 1.0;
+
+    double level = 1.0;
 
     public boolean initOuttake(OpMode opMode)
     {
@@ -94,6 +98,12 @@ public class Outtake {
             liftRight.setPower(liftPower * k);
             liftLeft.setPower(liftPower * k);
 
+            while(encoderLevelCount * level > liftLeft.getCurrentPosition())
+            {
+            }
+
+            level += 1;
+
         }
         else if(opMode.gamepad2.dpad_down && !bottom)
         {
@@ -101,6 +111,12 @@ public class Outtake {
 
             liftRight.setPower(-liftPower * k);
             liftLeft.setPower(-liftPower * k);
+
+            level -= 1;
+
+            while(encoderLevelCount * (level - 1) < liftLeft.getCurrentPosition())
+            {
+            }
         }
         else
         {
