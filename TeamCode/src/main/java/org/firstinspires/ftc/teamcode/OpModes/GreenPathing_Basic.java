@@ -44,25 +44,25 @@ public class GreenPathing_Basic extends LinearOpMode {
 
         intake.initIntake(this);
         outtake.initOutPut(this);
-        initVuforia();
+        vuf.initVuforia(this);
         waitForStart();
 
         driveTrain.encoderDrive(driveSpeed,  10,  10, 10, 10, 2);
 
-        switch (senseSkystone()) {
-            case posOne:
+        switch (vuf.senseSkystone(this)) {
+            case 1:
                 driveTrain.encoderDrive(driveSpeed,  5,  5, 5, 5, 2);
                 intake.compliantIntake_Auto(1, true);
                 //rest of code for EVERYTHING
                 break;
-            case posTwo:
+            case 2:
                 driveTrain.encoderDrive(driveSpeed,  5,  5, 5, 5, 2);
                 intake.compliantIntake_Auto(1, true);
 
                 //rest of code for EVERYTHING
 
                 break;
-            case posThree:
+            case 3:
                 driveTrain.encoderDrive(driveSpeed,  5,  5, 5, 5, 2);
                 intake.compliantIntake_Auto(1, true);
 
@@ -81,137 +81,5 @@ public class GreenPathing_Basic extends LinearOpMode {
         telemetry.addData("Path", "Complete");
         telemetry.update();
     }
-    final static int posOne = 1;
-    final static int posTwo = 2;
-    final static int posThree = 3;
 
-    public int senseSkystone() {
-
-        initVuforia();
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
-        stonesAndChips.activate();
-
-        int stonePos = 0;
-
-        while (opModeIsActive()) {
-
-            for (VuforiaTrackable trackable : allTrackables) {
-
-                if (trackable.getName() == "TargetElement") {
-                    stonePos = posOne;
-                    break;
-                } else {
-                    driveTrain.encoderDrive(driveSpeed,8, -8, -8, 8, 2);
-                }
-                if (stonePos == posOne) {
-                    break;
-                } else if (trackable.getName() == "TargetElement") {
-                    stonePos = posTwo;
-                } else {
-                    driveTrain.encoderDrive(driveSpeed,8, -8, -8, 8, 2);
-                    stonePos = posThree;
-                }
-
-            }
-        } return stonePos;
-    }
-
-    public static final String TAG = "VuforiaTesting Navigation Sample";
-
-
-    OpenGLMatrix lastLocation = null;
-
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the VuforiaTesting
-     * localization engine.
-     */
-    VuforiaLocalizer vuforia;
-
-    public void initVuforia() {
-
-
-        /*
-         * To start up VuforiaTesting, tell it the view that we wish to use for camera monitor (on the RC phone);
-         * If no camera monitor is desired, use the parameterless constructor instead (commented out below).
-         */
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-
-
-        parameters.vuforiaLicenseKey = "AdzMYbL/////AAABmflzIV+frU0RltL/ML+2uAZXgJiIWerfe92N/AeH7QsWCOQqyKa2G+tUDcgvg8uE8QjHeBZPcpf5hAwlC5qCfvg76eBoaa2bMMZ73hmTiHmr9fj3XmF4LWWZtDC6pWTFrzRAUguhlvgnck6Y4jjM16Px5TqgWYuWnpcxNMHMyOXdnHLlyysyE64PVzoN7hgMXgbi2K8+pmTXvpV2OeLCag8fAj1Tgdm/kKGr0TX86aQsC2RVjToZXr9QyAeyODi4l1KEFmGwxEoteNU8yqNbBGkPXGh/+IIm6/s/KxCJegg8qhxZDgO8110FRzwA5a6EltfxAMmtO0G8BB9SSkApxkcSzpyI0k2LxWof2YZG6x4H";
-
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-
-        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
-        VuforiaTrackable redTarget = stonesAndChips.get(0);
-        redTarget.setName("RedTarget");  // Stones
-
-        VuforiaTrackable blueTarget  = stonesAndChips.get(1);
-        blueTarget.setName("BlueTarget");  // Chips
-
-        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
-        allTrackables.addAll(stonesAndChips);
-
-
-        float mmPerInch        = 25.4f;
-        float mmBotWidth       = 18 * mmPerInch;            // ... or whatever is right for your robot
-        float mmFTCFieldWidth  = (12*12 - 2) * mmPerInch;   // the FTC field is ~11'10" center-to-center of the glass panels
-
-
-        OpenGLMatrix redTargetLocationOnField = OpenGLMatrix
-                /* Then we translate the target off to the RED WALL. Our translation here
-                is a negative translation in X.*/
-                .translation(-mmFTCFieldWidth/2, 0, 0)
-                .multiplied(Orientation.getRotationMatrix(
-                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X, then 90 in Z */
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 90, 0));
-        redTarget.setLocation(redTargetLocationOnField);
-        RobotLog.ii(TAG, "Red Target=%s", format(redTargetLocationOnField));
-
-        /*
-         * To place the Stones Target on the Blue Audience wall:
-         * - First we rotate it 90 around the field's X axis to flip it upright
-         * - Finally, we translate it along the Y axis towards the blue audience wall.
-         */
-        OpenGLMatrix blueTargetLocationOnField = OpenGLMatrix
-                /* Then we translate the target off to the Blue Audience wall.
-                Our translation here is a positive translation in Y.*/
-                .translation(0, mmFTCFieldWidth/2, 0)
-                .multiplied(Orientation.getRotationMatrix(
-                        /* First, in the fixed (field) coordinate system, we rotate 90deg in X */
-                        AxesReference.EXTRINSIC, AxesOrder.XZX,
-                        AngleUnit.DEGREES, 90, 0, 0));
-        blueTarget.setLocation(blueTargetLocationOnField);
-        RobotLog.ii(TAG, "Blue Target=%s", format(blueTargetLocationOnField));
-
-
-        OpenGLMatrix phoneLocationOnRobot = OpenGLMatrix
-                .translation(mmBotWidth/2,0,0)
-                .multiplied(Orientation.getRotationMatrix(
-                        AxesReference.EXTRINSIC, AxesOrder.YZY,
-                        AngleUnit.DEGREES, -90, 0, 0));
-        RobotLog.ii(TAG, "phone=%s", format(phoneLocationOnRobot));
-
-
-        ((VuforiaTrackableDefaultListener)redTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-        ((VuforiaTrackableDefaultListener)blueTarget.getListener()).setPhoneInformation(phoneLocationOnRobot, parameters.cameraDirection);
-
-
-        telemetry.addData(">", "Press Play to start tracking");
-        telemetry.update();
-        /**
-         @see VuforiaTrackableDefaultListener#getRobotLocation()
-         */
-        stonesAndChips.activate();
-
-    }
-    String format(OpenGLMatrix transformationMatrix) {
-        return transformationMatrix.formatAsTransform();
-    }
 }

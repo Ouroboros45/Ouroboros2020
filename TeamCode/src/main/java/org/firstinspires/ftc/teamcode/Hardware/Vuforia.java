@@ -20,7 +20,7 @@ import java.util.List;
 
 public class Vuforia {
 
-
+    DriveTrain driveTrain = new DriveTrain();
     public static final String TAG = "VuforiaTesting Navigation Sample";
 
     OpenGLMatrix lastLocation = null;
@@ -214,4 +214,41 @@ public class Vuforia {
     String format(OpenGLMatrix transformationMatrix) {
         return transformationMatrix.formatAsTransform();
     }
+    public final int posOne = 1;
+    public final int posTwo = 2;
+    public final int posThree = 3;
+
+
+    public int senseSkystone(LinearOpMode opMode) {
+
+        VuforiaTrackables stonesAndChips = this.vuforia.loadTrackablesFromAsset("StonesAndChips");
+        List<VuforiaTrackable> allTrackables = new ArrayList<VuforiaTrackable>();
+        allTrackables.addAll(stonesAndChips);
+        stonesAndChips.activate();
+
+        int stonePos = 0;
+
+        while (opMode.opModeIsActive()) {
+
+            for (VuforiaTrackable trackable : allTrackables) {
+
+                if (trackable.getName() == "TargetElement") {
+                    stonePos = posOne;
+                    break;
+                } else {
+                    driveTrain.encoderDrive(.6,8, -8, -8, 8, 2);
+                }
+                if (stonePos == posOne) {
+                    break;
+                } else if (trackable.getName() == "TargetElement") {
+                    stonePos = posTwo;
+                } else {
+                    driveTrain.encoderDrive(.6,8, -8, -8, 8, 2);
+                    stonePos = posThree;
+                }
+
+            }
+        } return stonePos;
+    }
+
 }
