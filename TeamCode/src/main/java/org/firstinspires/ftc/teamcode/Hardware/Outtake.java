@@ -57,6 +57,11 @@ public class Outtake {
     // z_coord - robot lift moves up and down using Lift DcMotors
     // once coordinates placed into method robot auto aligns the whole output system to
     // drop the block off on at the right spot
+
+    // Process : Robot Aligns, Lift Extends Up, CRServos move forward while hook connected to servo
+    // is in contact with block, when block needs to be released hook from servo extended out
+
+
     public void outTake_Auto (double x_coord, double y_coord, double z_coord)
     {
 
@@ -70,8 +75,16 @@ public class Outtake {
     }
 
     //  opens up the output basket using the Servos
-    public void dropItem()
+    public void openBasket()
     {
 
     }
+
+    //  resets all variables and sets lift back to initial position
+    public void resetOuttake()
+    {
+
+
+    }
+
 }

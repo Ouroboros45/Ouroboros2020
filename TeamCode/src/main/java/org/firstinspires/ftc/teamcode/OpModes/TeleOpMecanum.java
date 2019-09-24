@@ -150,10 +150,18 @@ public class TeleOpMecanum extends OpMode {
             speed = gamepad1.right_stick_x;
 
             //Sets Power to Wheel
-            drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
-            drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
-            drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
-            drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
+            if(!cfmToggle)
+            {
+                drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
+                drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
+                drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
+                drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
+            }
+            else if(cfmToggle && Math.abs(gamepad1.left_stick_x) > .05)
+            {
+                // setPower(cfm_power)
+            }
+
 
             //Intake
             intake.compliantIntake_TeleOp();
