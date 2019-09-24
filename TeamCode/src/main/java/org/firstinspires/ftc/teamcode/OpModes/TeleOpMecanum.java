@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 import org.firstinspires.ftc.teamcode.Hardware.Intake;
+import org.firstinspires.ftc.teamcode.Hardware.Outtake;
 
 //TeleOp class identifier
 @TeleOp(name="Arcade Drive", group="TeleOp")
@@ -16,6 +17,7 @@ public class TeleOpMecanum extends OpMode {
     //Instantiate Variables
     DriveTrain drive = new DriveTrain();
     Intake intake = new Intake();
+    Outtake outtake = new Outtake();
 
     //Variables for Arcade Drive
     int motorPos = 0;
@@ -24,16 +26,26 @@ public class TeleOpMecanum extends OpMode {
     double direction;
     double velocity;
     double speed;
-    double speedHalver;
+    double speedProp;
     boolean halfTrue = false;
+    boolean cfmToggle = false;
 
-    //Variables for Cruise Foundation Moving (CFM)
-    private static final double  massFoundation = 0.0;
-    private static final double massStone = 0.0;
-    double foundationForce = 0.0;
-    double frictionForce = 0.0;
-    double stoneForce = 0.0;
-    double distance = .25;
+    //  Variables for Cruise Foundation Moving (CFM)
+    //  mu = Approximated Static Coefficient of Friction
+    //  fix = A fixing constant
+    // distance = distance traveled by robot while moving foundation
+    //  mass = mass of the foundation + mass of the blocks
+    // numberStackedBlocks = number of blocks stacked on top of one another
+    //  maxCFM_Velocity = Max velocity foundation with blocks can move before dropping blocks
+
+    private static final double  massFoundation = 1.905; // Mass in kg
+    private static final double massStone = .1882;
+    static final double muBlocks = .78;
+    static final double muMat = .535;
+    double fix = 1.0;
+    double distance = .1;
+    double mass = 0.0;
+    double foundationFriction = 0.0;
     double maxCFM_Velocity = 0.0;
 
     int numberStackedBlocks = 0;
@@ -50,6 +62,7 @@ public class TeleOpMecanum extends OpMode {
         drive.runtime.reset();
 
         intake.initIntake(this);
+        outtake.initOuttake(this);
 
         distance = 0.0;
         numberStackedBlocks = 0;
@@ -87,10 +100,10 @@ public class TeleOpMecanum extends OpMode {
 
             //Speed Reducer
             if (gamepad1.right_bumper && !halfTrue) {
-                speedHalver = .5;
+                speedProp = .5;
             } else if (gamepad1.right_bumper && halfTrue){
-                speedHalver = 1;
-        }
+                speedProp = 1;
+            }
 
             //Foundation Moving Toggle
             //Toggle sets speed such that the robot can move the fastest
@@ -108,8 +121,25 @@ public class TeleOpMecanum extends OpMode {
                 numberStackedBlocks--;
             }
 
-            maxCFM_Velocity = Math.sqrt(2 * distance * ((foundationForce + frictionForce + stoneForce * numberStackedBlocks)
-                    / (massFoundation + massStone * numberStackedBlocks)));
+            mass = massFoundation + numberStackedBlocks * massStone;
+            maxCFM_Velocity = fix * Math.sqrt(2 * distance * ((massStone * (numberStackedBlocks + 1) * 9.81 * muBlocks)) / mass);
+
+            telemetry.addData("Number of Blocks : ", numberStackedBlocks);
+            telemetry.update();
+
+            //set up power conversion
+            //set up toggle
+
+            if(gamepad1.b && !cfmToggle)
+            {
+                //set speedProm to cfm
+                cfmToggle = true;
+            }
+            else if(gamepad1.b && cfmToggle)
+            {
+                //set power to normal
+                cfmToggle = false;
+            }
 
 
 
@@ -120,12 +150,23 @@ public class TeleOpMecanum extends OpMode {
             speed = gamepad1.right_stick_x;
 
             //Sets Power to Wheel
-            drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedHalver);
-            drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedHalver);
-            drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedHalver);
-            drive.br.setPower((velocity * Math.cos(direction) - speed) * speedHalver);
+            if(!cfmToggle)
+            {
+                drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
+                drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
+                drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
+                drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
+            }
+            else if(cfmToggle && Math.abs(gamepad1.left_stick_x) > .05)
+            {
+                // setPower(cfm_power)
+            }
+
 
             //Intake
             intake.compliantIntake_TeleOp();
+
+            //Outtake
+            outtake.outTake_TeleOp();
     }
 }
