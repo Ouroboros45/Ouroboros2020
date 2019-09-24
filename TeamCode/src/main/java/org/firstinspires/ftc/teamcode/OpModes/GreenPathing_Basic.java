@@ -43,9 +43,8 @@ public class GreenPathing_Basic extends LinearOpMode {
         driveTrain.resetEncoders();
 
         intake.initIntake(this);
-        outtake.initOutPut(this);
+        outtake.initOuttake(this);
         vuf.initVuforia(this);
-        outtake.initOutPut(this);
         vuf.initVuforia(this);
         waitForStart();
 
