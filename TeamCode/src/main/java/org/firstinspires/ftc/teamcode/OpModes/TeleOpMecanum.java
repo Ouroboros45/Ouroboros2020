@@ -168,5 +168,10 @@ public class TeleOpMecanum extends OpMode {
 
             //Outtake
             outtake.outTake_TeleOp();
+            if (gamepad2.a && outtake.pushBlock.getPosition() != .5) {
+                outtake.pushBlock.setPosition(.5);
+            } else if (gamepad2.a && outtake.pushBlock.getPosition() == .5) {
+                outtake.pushBlock.setPosition(1);
+            }
     }
 }
