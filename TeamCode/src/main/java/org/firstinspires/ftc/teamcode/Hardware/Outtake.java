@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class Outtake {
 
-    Servo pushBlock;
+    public Servo pushBlock;
     CRServo rightSideY;
     CRServo leftSideY;
     DcMotor liftRight;
