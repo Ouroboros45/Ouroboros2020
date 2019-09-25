@@ -46,7 +46,6 @@ public class TeleOpTrollTest extends OpMode {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        drive.resetEncoders();
         drive.runtime.reset();
         numberStackedBlocks = 0;
 
@@ -56,14 +55,18 @@ public class TeleOpTrollTest extends OpMode {
     @Override
     public void loop() {
 
+
+        motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
+                * drive.br.getCurrentPosition()) / 4;
+        speed = gamepad1.right_stick_x;
+
         telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
         telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
         telemetry.addData("Motor Position", "Motor Rotation", +speed);
         telemetry.update();
 
         //Gets Motor Position By Taking Average From All Motors
-        motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
-                * drive.br.getCurrentPosition()) / 4;
+
 
         //Arcade Controls
         //Latitudinal Direction
