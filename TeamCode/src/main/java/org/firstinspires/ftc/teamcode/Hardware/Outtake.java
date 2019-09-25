@@ -23,7 +23,7 @@ public class Outtake {
     boolean bottom;
     boolean blockInLift;
 
-    static final double liftExtensionTime = 1000; // Time it takes for lift to extend out
+    static final double liftExtensionTime = 1000; // Time it takes for lift to extend out = length of lift / speed of motors
 
     static final double encoderLevelCount = (1800.61842251 / Math.PI) ;
 
@@ -46,7 +46,7 @@ public class Outtake {
 
         try
         {
-            pushBlock = opMode.hardwareMap.servo.get("Open Basket");
+            pushBlock = opMode.hardwareMap.servo.get("Push Block");
             rightSideY = opMode.hardwareMap.crservo.get("Right Outtake");
             leftSideY = opMode.hardwareMap.crservo.get("Left Outtake");
             liftLeft = opMode.hardwareMap.dcMotor.get("Left Lift");
@@ -86,10 +86,12 @@ public class Outtake {
 
     }
 
-    // contains button to move the lift along the y and z plane
-    // gamepad two
+    //moves lift up and down by increments
+
     public void outTake_TeleOp()
     {
+
+
 
         if(opMode.gamepad2.dpad_up && !top)
         {
@@ -126,15 +128,20 @@ public class Outtake {
             liftLeft.setPower(0);
         }
 
-        if(opMode.gamepad2.a)
+        //  Extend Outtake out, and activate servo to push block forward
+
+        if(opMode.gamepad2.a && pushBlock.getPosition() == .5)
         {
             openBasket();
+        }
+        else if(opMode.gamepad2.a && pushBlock.getPosition() != .5)
+        {
+            pushBlock.setPosition(.5);
         }
         else if(opMode.gamepad2.b)
         {
             resetOuttake();
         }
-
 
         // lift proportional changing, for precision placement
 
@@ -147,6 +154,8 @@ public class Outtake {
         {
             k += .1;
         }
+
+
 
         opMode.telemetry.addData("Lift Power", k);
         opMode.telemetry.update();
@@ -168,7 +177,11 @@ public class Outtake {
         rightSideY.setPower(0);
         leftSideY.setPower(0);
 
-        pushBlock.setPosition(.5); //set position direction on angle - ask  trevor
+        pushBlock.setPosition(1); //set position direction on angle - ask  trevor
+
+        // should push block out at that point
+
+        pushBlock.setPosition(.5); // back to open position
 
     }
 
@@ -177,7 +190,7 @@ public class Outtake {
     {
         time.reset();
 
-        pushBlock.setPosition(0); // moves servo to open position what ever angle that is
+        pushBlock.setPosition(.5); // moves servo to open position what ever angle that is
 
         rightSideY.setPower(-1);
         leftSideY.setPower(-1);

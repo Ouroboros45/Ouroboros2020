@@ -34,8 +34,8 @@ public class Intake {
 
         try
         {
-            rightSide = opMode.hardwareMap.dcMotor.get("Right Intake");
-            leftSide = opMode.hardwareMap.dcMotor.get("Left Intake");
+            rightSide = opMode.hardwareMap.dcMotor.get("RIn");
+            leftSide = opMode.hardwareMap.dcMotor.get("LIn");
 
             opMode.telemetry.addData("Success", "Intake Initialized");
             opMode.telemetry.update();

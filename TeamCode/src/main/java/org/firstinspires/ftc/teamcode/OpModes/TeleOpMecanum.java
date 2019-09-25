@@ -31,19 +31,13 @@ public class TeleOpMecanum extends OpMode {
     boolean cfmToggle = false;
 
     //  Variables for Cruise Foundation Moving (CFM)
-    //  mu = Approximated Static Coefficient of Friction
-    //  fix = A fixing constant
-    // distance = distance traveled by robot while moving foundation
-    //  mass = mass of the foundation + mass of the blocks
-    // numberStackedBlocks = number of blocks stacked on top of one another
-    //  maxCFM_Velocity = Max velocity foundation with blocks can move before dropping blocks
 
     private static final double  massFoundation = 1.905; // Mass in kg
     private static final double massStone = .1882;
     static final double muBlocks = .78;
     static final double muMat = .535;
     double fix = 1.0;
-    double distance = .1;
+    double tolerance = .05;
     double mass = 0.0;
     double foundationFriction = 0.0;
     double maxCFM_Velocity = 0.0;
@@ -64,7 +58,6 @@ public class TeleOpMecanum extends OpMode {
         intake.initIntake(this);
         outtake.initOuttake(this);
 
-        distance = 0.0;
         numberStackedBlocks = 0;
 
     }
@@ -122,7 +115,8 @@ public class TeleOpMecanum extends OpMode {
             }
 
             mass = massFoundation + numberStackedBlocks * massStone;
-            maxCFM_Velocity = fix * Math.sqrt(2 * distance * ((massStone * (numberStackedBlocks + 1) * 9.81 * muBlocks)) / mass);
+            maxCFM_Velocity = fix * Math.sqrt((2 * tolerance * 9.81 * massStone * numberStackedBlocks * muBlocks)
+                    / mass);
 
             telemetry.addData("Number of Blocks : ", numberStackedBlocks);
             telemetry.update();
@@ -168,10 +162,15 @@ public class TeleOpMecanum extends OpMode {
 
             //Outtake
             outtake.outTake_TeleOp();
+
+            // dont need, implemented in outtake class already
+            /*
             if (gamepad2.a && outtake.pushBlock.getPosition() != .5) {
                 outtake.pushBlock.setPosition(.5);
             } else if (gamepad2.a && outtake.pushBlock.getPosition() == .5) {
                 outtake.pushBlock.setPosition(1);
             }
+             */
+
     }
 }
