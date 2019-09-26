@@ -73,7 +73,6 @@ public class TeleOpMecanum extends OpMode {
             telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
             telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
             telemetry.addData("Motor Position", "Motor Rotation", + speed);
-            telemetry.update();
 
             //Gets Motor Position By Taking Average From All Motors
             motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
@@ -137,7 +136,6 @@ public class TeleOpMecanum extends OpMode {
                     + DriveTrain.stallTorque * CFM_AungularVelocity;
 
             telemetry.addData("Number of Blocks : ", numberStackedBlocks);
-            telemetry.update();
 
             //set up power conversion
             //set up toggle
@@ -151,7 +149,7 @@ public class TeleOpMecanum extends OpMode {
                 cfmToggle = false;
             }
 
-
+            telemetry.addData("CFM Toggle : ", cfmToggle);
 
             //Gets Magnitude of Left Stick
             velocity = Math.hypot(leftStickX, leftStickY);
@@ -167,7 +165,7 @@ public class TeleOpMecanum extends OpMode {
                 drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
                 drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
             }
-            else if(cfmToggle && Math.abs(gamepad1.left_stick_x) > .05)
+            else if(cfmToggle)
             {
 
                 direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x;
@@ -178,7 +176,7 @@ public class TeleOpMecanum extends OpMode {
                 drive.br.setPower(cfm_power * direct);
             }
 
-
+            telemetry.addData("CFM Power : ", cfm_power);
             //Intake
             intake.compliantIntake_TeleOp();
 
@@ -193,6 +191,6 @@ public class TeleOpMecanum extends OpMode {
                 outtake.pushBlock.setPosition(1);
             }
              */
-
+            telemetry.update();
     }
 }
