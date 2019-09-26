@@ -22,7 +22,7 @@ public class TeleOpTrollTest extends OpMode {
     double velocity;
     double speed;
     double speedProp = 1.0;
-    boolean halfTrue = false;
+    boolean pastX = false;
     boolean cfmToggle = false;
     double direct = 1.0;
     boolean pastDPadUp = false;
@@ -109,19 +109,15 @@ public class TeleOpTrollTest extends OpMode {
         }
 
         //Speed Reducer
-        if (gamepad1.x != halfTrue && !halfTrue) {
-            halfTrue = gamepad1.x;
-            if (halfTrue) {
-                speedProp = 0.5;
+        if (gamepad1.x != pastX) {
+            pastX = gamepad1.x;
+            if (gamepad1.x) {
+                if (speedProp == 1) {
+                    speedProp = 0.5;
+                } else {
+                    speedProp = 1;
+                }
             }
-        }
-
-        else if (halfTrue) {
-            halfTrue = gamepad1.x;
-            if (halfTrue) {
-                speedProp = 1;
-            }
-            halfTrue = false;
         }
 
 
@@ -202,10 +198,10 @@ public class TeleOpTrollTest extends OpMode {
 
             direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x + .0001;
             // setPower(cfm_power)
-            drive.fl.setPower(cfm_power * direct);
-            drive.fr.setPower(-cfm_power * direct);
-            drive.bl.setPower(-cfm_power * direct);
-            drive.br.setPower(cfm_power * direct);
+            drive.fl.setPower(-cfm_power * direct);
+            drive.fr.setPower(cfm_power * direct);
+            drive.bl.setPower(cfm_power * direct);
+            drive.br.setPower(-cfm_power * direct);
         }
         telemetry.addData("CFM Power : ", cfm_power);
 
@@ -224,7 +220,7 @@ public class TeleOpTrollTest extends OpMode {
             drive.br.setPower(-1);
         }
 
-        telemetry.addData("Halfing Speed : ", halfTrue);
+        telemetry.addData("Halfing Speed : ", pastX);
         telemetry.update();
     }
 }
