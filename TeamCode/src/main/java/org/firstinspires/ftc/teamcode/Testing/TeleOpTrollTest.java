@@ -196,8 +196,18 @@ public class TeleOpTrollTest extends OpMode {
         else if(cfmToggle)
         {
 
-            direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x + .0001;
-            // setPower(cfm_power)
+            if (gamepad1.left_stick_x > 0.5) {
+                direct = 1;
+            }
+
+            else if (gamepad1.left_stick_x < -0.5) {
+                direct = -1;
+            }
+
+            else {
+                direct = 0;
+            }
+
             drive.fl.setPower(-cfm_power * direct);
             drive.fr.setPower(cfm_power * direct);
             drive.bl.setPower(cfm_power * direct);
@@ -221,6 +231,7 @@ public class TeleOpTrollTest extends OpMode {
         }
 
         telemetry.addData("Halfing Speed : ", pastX);
+        telemetry.addData("Encoded Acceleration : ", drive.getEncodedAccel(.22/90));
         telemetry.update();
     }
 }

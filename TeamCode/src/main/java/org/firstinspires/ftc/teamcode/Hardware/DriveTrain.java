@@ -31,6 +31,17 @@ public class DriveTrain {
     public double error;
     public double time;
 
+    //encoded acceleration variables
+
+    double position;
+    double time_ea;
+    double prevPosition;
+    double prevTime_ea;
+    double prevNewTime;
+    double prevAccel;
+    double accel;
+    double masterAccel;
+
 
     public void initDriveTrain(LinearOpMode opMode) {
 
@@ -214,35 +225,25 @@ public class DriveTrain {
     public double getEncodedAccel (double kD) {
         runtime.reset();
 
-        double position;
-        double time;
-        double prevPosition;
-        double prevTime;
-        double prevNewTime;
-        boolean active = true;
-        double prevAccel;
-        double accel;
-        double masterAccel;
-
         prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
         prevTime = runtime.milliseconds();
-        time = runtime.milliseconds();
+        time_ea = runtime.milliseconds();
         position = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
 
-        prevAccel = ((position - prevError) / (time - prevTime)) * kD;
+        prevAccel = ((position - prevPosition) / (time_ea - prevTime_ea)) * kD;
 
         prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
         prevNewTime = runtime.milliseconds();
-        time = runtime.milliseconds();
+        time_ea = runtime.milliseconds();
         position = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
 
-        accel = ((position - prevError) / (time - prevNewTime)) * kD;
+        accel = ((position - prevPosition) / (time_ea - prevNewTime)) * kD;
 
-        masterAccel =  ((accel - prevAccel) / (time - prevTime)) * kD;
+        masterAccel =  ((accel - prevAccel) / (time_ea - prevTime_ea)) * -kD;
         return masterAccel;
     }
 
