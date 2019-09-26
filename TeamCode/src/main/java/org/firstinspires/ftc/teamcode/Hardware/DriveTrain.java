@@ -9,8 +9,8 @@ public class DriveTrain {
     private static double motorCounts = 1440;
     private static double gearUp = 1;
     public static double wheelDiam = 4;
-    public static double noLoadSpeed = 1.0; // Max Angular Velocity for 20 : 1 motor
-    public static double stallTorque = 1.0; // Max Torque for 20 : 1 motor
+    public static double noLoadSpeed = 31.4 ; // Max Angular Velocity in radians/second for 20 : 1 motor
+    public static double stallTorque = 2.1; // Max Torque in Newton Meters for 20 : 1 motor
     private static double inchCounts = (motorCounts / gearUp) / (wheelDiam * Math.PI);
 
     public ElapsedTime runtime = new ElapsedTime();

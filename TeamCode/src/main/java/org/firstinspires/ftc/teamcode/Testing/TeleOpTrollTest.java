@@ -120,10 +120,15 @@ public class TeleOpTrollTest extends OpMode {
         //and the friction of the floor
 
         if (gamepad2.dpad_up) {
+            while(gamepad1.dpad_down)
+            {
+            }
             numberStackedBlocks++;
         }
-
-        if (gamepad2.dpad_down) {
+        else if (gamepad2.dpad_down) {
+            while(gamepad1.dpad_down)
+            {
+            }
             numberStackedBlocks--;
         }
 
@@ -177,7 +182,6 @@ public class TeleOpTrollTest extends OpMode {
                 drive.bl.setPower(-cfm_power * direct);
                 drive.br.setPower(cfm_power * direct);
         }
-
         telemetry.update();
     }
 }
