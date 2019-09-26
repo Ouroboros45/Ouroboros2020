@@ -169,10 +169,10 @@ public class TeleOpMecanum extends OpMode {
 
                 direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x;
                 // setPower(cfm_power)
-                drive.fl.setPower(-cfm_power * direct);
-                drive.fr.setPower(cfm_power * direct);
-                drive.bl.setPower(cfm_power * direct);
-                drive.br.setPower(-cfm_power * direct);
+                drive.fl.setPower(cfm_power * direct);
+                drive.fr.setPower(-cfm_power * direct);
+                drive.bl.setPower(-cfm_power * direct);
+                drive.br.setPower(cfm_power * direct);
             }
 
 
