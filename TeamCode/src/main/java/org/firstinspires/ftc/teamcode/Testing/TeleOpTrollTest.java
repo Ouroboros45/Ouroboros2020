@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Testing;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
@@ -20,7 +21,7 @@ public class TeleOpTrollTest extends OpMode {
     double direction;
     double velocity;
     double speed;
-    double speedProp;
+    double speedProp = 1;
     boolean halfTrue = false;
     boolean cfmToggle = false;
 
@@ -43,10 +44,31 @@ public class TeleOpTrollTest extends OpMode {
     @Override
     public void init() {
 
+
+
+        //Sets Hardware Map
+        drive.fl = hardwareMap.dcMotor.get("fl");
+        drive.fr = hardwareMap.dcMotor.get("fr");
+        drive.bl = hardwareMap.dcMotor.get("bl");
+        drive.br = hardwareMap.dcMotor.get("br");
+
+        //Sets Motor Directions
+        drive.fl.setDirection(DcMotor.Direction.REVERSE);
+        drive.fr.setDirection(DcMotor.Direction.FORWARD);
+        drive.bl.setDirection(DcMotor.Direction.REVERSE);
+        drive.br.setDirection(DcMotor.Direction.FORWARD);
+
+        //Set Power For Static Motors - When Robot Not Moving
+        drive.fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        drive.fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        drive.bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        drive.br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         drive.runtime.reset();
+
         numberStackedBlocks = 0;
 
     }
@@ -56,12 +78,12 @@ public class TeleOpTrollTest extends OpMode {
     public void loop() {
 
 
-        motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
-                * drive.br.getCurrentPosition()) / 4;
+       // motorPos = (drive.fr.getCurrentPosition() * drive.fl.getCurrentPosition() * drive.bl.getCurrentPosition()
+               // * drive.br.getCurrentPosition()) / 4;
         speed = gamepad1.right_stick_x;
 
         telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
-        telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
+      //  telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
         telemetry.addData("Motor Position", "Motor Rotation", +speed);
         telemetry.update();
 
@@ -83,9 +105,9 @@ public class TeleOpTrollTest extends OpMode {
         }
 
         //Speed Reducer
-        if (gamepad1.right_bumper && !halfTrue) {
+        if (gamepad1.right_stick_button && !halfTrue) {
             speedProp = .5;
-        } else if (gamepad1.right_bumper && halfTrue) {
+        } else if (gamepad1.right_stick_button && halfTrue) {
             speedProp = 1;
         }
 
@@ -113,13 +135,6 @@ public class TeleOpTrollTest extends OpMode {
         //set up power conversion
         //set up toggle
 
-        if (gamepad1.b && !cfmToggle) {
-            //set speedProm to cfm
-            cfmToggle = true;
-        } else if (gamepad1.b && cfmToggle) {
-            //set power to normal
-            cfmToggle = false;
-        }
 
 
         //Gets Magnitude of Left Stick
@@ -129,13 +144,11 @@ public class TeleOpTrollTest extends OpMode {
         speed = gamepad1.right_stick_x;
 
         //Sets Power to Wheel
-        if (!cfmToggle) {
             drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
             drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
             drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
             drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
-        } else if (cfmToggle && Math.abs(gamepad1.left_stick_x) > .05) {
-            // setPower(cfm_power)
-        }
+
+
     }
 }

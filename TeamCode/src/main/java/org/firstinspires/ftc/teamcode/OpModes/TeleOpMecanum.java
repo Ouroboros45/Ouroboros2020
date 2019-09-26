@@ -59,7 +59,7 @@ public class TeleOpMecanum extends OpMode {
         outtake.initOuttake(this);
 
         numberStackedBlocks = 0;
-
+        cfmToggle = false;
     }
 
     //Main Loop
