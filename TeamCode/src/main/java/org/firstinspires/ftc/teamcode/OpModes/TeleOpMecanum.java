@@ -108,15 +108,18 @@ public class TeleOpMecanum extends OpMode {
             //Takes into account the mass of the foundation and block stack
             //and the friction of the floor
 
-            if(gamepad2.dpad_up)
+        if (gamepad2.dpad_up) {
+            while(gamepad1.dpad_down)
             {
-                numberStackedBlocks++;
             }
-
-            if(gamepad2.dpad_down)
+            numberStackedBlocks++;
+        }
+        else if (gamepad2.dpad_down) {
+            while(gamepad1.dpad_down)
             {
-                numberStackedBlocks--;
             }
+            numberStackedBlocks--;
+        }
 
 
             //  Mass of Whole Object

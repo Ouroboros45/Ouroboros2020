@@ -169,7 +169,7 @@ public class TeleOpTrollTest extends OpMode {
             cfmToggle = false;
         }
 
-
+        telemetry.addData("CFM ", "Toggled");
 
         //Gets Magnitude of Left Stick
         velocity = Math.hypot(leftStickX, leftStickY);
