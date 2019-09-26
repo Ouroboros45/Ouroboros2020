@@ -204,6 +204,13 @@ public class TeleOpTrollTest extends OpMode {
             drive.bl.setPower(-1);
             drive.br.setPower(1);
         }
+        if(gamepad1.dpad_left)
+        {
+            drive.fl.setPower(-1);
+            drive.fr.setPower(1);
+            drive.bl.setPower(1);
+            drive.br.setPower(-1);
+        }
         telemetry.update();
     }
 }
