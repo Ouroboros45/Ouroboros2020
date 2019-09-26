@@ -109,11 +109,21 @@ public class TeleOpTrollTest extends OpMode {
         }
 
         //Speed Reducer
-        if (gamepad1.right_stick_button && !halfTrue) {
-            speedProp = .5;
-        } else if (gamepad1.right_stick_button && halfTrue) {
-            speedProp = 1;
+        if (gamepad1.x != halfTrue && !halfTrue) {
+            halfTrue = gamepad1.x;
+            if (halfTrue) {
+                speedProp = 0.5;
+            }
         }
+
+        else if (halfTrue) {
+            halfTrue = gamepad1.x;
+            if (halfTrue) {
+                speedProp = 1;
+            }
+            halfTrue = false;
+        }
+
 
         //Foundation Moving Toggle
         //Toggle sets speed such that the robot can move the fastest
@@ -214,7 +224,7 @@ public class TeleOpTrollTest extends OpMode {
             drive.br.setPower(-1);
         }
 
-        telemetry.addData("Encoded Acceleration", drive.getEncodedAccel(.02/90));
+        telemetry.addData("Halfing Speed : ", halfTrue);
         telemetry.update();
     }
 }
