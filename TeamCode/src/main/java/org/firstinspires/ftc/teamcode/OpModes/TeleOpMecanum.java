@@ -29,6 +29,8 @@ public class TeleOpMecanum extends OpMode {
     double speedProp;
     boolean halfTrue = false;
     boolean cfmToggle = false;
+    double direct = 1.0;
+
 
     //  Variables for Cruise Foundation Moving (CFM)
 
@@ -41,6 +43,8 @@ public class TeleOpMecanum extends OpMode {
     double mass = 0.0;
     double foundationFriction = 0.0;
     double maxCFM_Velocity = 0.0;
+    double CFM_AungularVelocity = 0.0;
+    double cfm_power = 0.0;
 
     int numberStackedBlocks = 0;
 
@@ -114,9 +118,20 @@ public class TeleOpMecanum extends OpMode {
                 numberStackedBlocks--;
             }
 
+
+            //  Mass of Whole Object
             mass = massFoundation + numberStackedBlocks * massStone;
+
+            //  Max CFM velocity, calculated
             maxCFM_Velocity = fix * Math.sqrt((2 * tolerance * 9.81 * massStone * numberStackedBlocks * muBlocks)
                     / mass);
+
+            //  CFM velocity to Aungular Velocity
+            CFM_AungularVelocity = maxCFM_Velocity / (DriveTrain.wheelDiam / 2);
+
+            //  Power to set motors to follow CFM velocity.
+            cfm_power = (-1) * (DriveTrain.stallTorque / DriveTrain.noLoadSpeed) * CFM_AungularVelocity
+                    + DriveTrain.stallTorque * CFM_AungularVelocity;
 
             telemetry.addData("Number of Blocks : ", numberStackedBlocks);
             telemetry.update();
@@ -126,12 +141,10 @@ public class TeleOpMecanum extends OpMode {
 
             if(gamepad1.b && !cfmToggle)
             {
-                //set speedProm to cfm
                 cfmToggle = true;
             }
             else if(gamepad1.b && cfmToggle)
             {
-                //set power to normal
                 cfmToggle = false;
             }
 
@@ -153,7 +166,13 @@ public class TeleOpMecanum extends OpMode {
             }
             else if(cfmToggle && Math.abs(gamepad1.left_stick_x) > .05)
             {
+
+                direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x;
                 // setPower(cfm_power)
+                drive.fl.setPower(-cfm_power * direct);
+                drive.fr.setPower(cfm_power * direct);
+                drive.bl.setPower(cfm_power * direct);
+                drive.br.setPower(-cfm_power * direct);
             }
 
 
