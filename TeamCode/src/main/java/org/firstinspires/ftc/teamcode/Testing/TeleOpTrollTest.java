@@ -127,7 +127,7 @@ public class TeleOpTrollTest extends OpMode {
                 numberStackedBlocks++;
             }
         }
-        else if (gamepad2.dpad_down) {
+        else if (gamepad2.dpad_down != pastDPadDown) {
             pastDPadDown = gamepad2.dpad_down;
             if (gamepad2.dpad_down) {
                 numberStackedBlocks--;
