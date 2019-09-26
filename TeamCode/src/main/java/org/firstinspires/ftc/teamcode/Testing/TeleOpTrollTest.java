@@ -21,7 +21,7 @@ public class TeleOpTrollTest extends OpMode {
     double direction;
     double velocity;
     double speed;
-    double speedProp;
+    double speedProp = 1.0;
     boolean halfTrue = false;
     boolean cfmToggle = false;
     double direct = 1.0;
@@ -88,7 +88,6 @@ public class TeleOpTrollTest extends OpMode {
         telemetry.addData("Status", "Run Time: " + drive.runtime.toString());
       //  telemetry.addData("Motor Encoder Position", "Average Ticks:" + motorPos);
         telemetry.addData("Motor Position", "Motor Rotation", +speed);
-        telemetry.update();
 
         //Gets Motor Position By Taking Average From All Motors
 
@@ -143,19 +142,11 @@ public class TeleOpTrollTest extends OpMode {
                 + DriveTrain.stallTorque * CFM_AungularVelocity;
 
         telemetry.addData("Number of Blocks : ", numberStackedBlocks);
-        telemetry.update();
+
 
         //set up power conversion
         //set up toggle
 
-        if(gamepad1.b && !cfmToggle)
-        {
-            cfmToggle = true;
-        }
-        else if(gamepad1.b && cfmToggle)
-        {
-            cfmToggle = false;
-        }
 
 
 
@@ -165,26 +156,28 @@ public class TeleOpTrollTest extends OpMode {
         direction = Math.atan2(leftStickY, -leftStickX) - Math.PI / 4;
         speed = gamepad1.right_stick_x;
 
+        telemetry.addData("Velocity : ", velocity);
+
+        telemetry.addData("Direction : ", direction);
+
+        telemetry.addData("Speed : ", speed);
+
         //Sets Power to Wheel
-        if(!cfmToggle)
-        {
             drive.fl.setPower((velocity * Math.cos(direction) + speed) * speedProp);
             drive.fr.setPower((velocity * Math.sin(direction) - speed) * speedProp);
             drive.bl.setPower((velocity * Math.sin(direction) + speed) * speedProp);
             drive.br.setPower((velocity * Math.cos(direction) - speed) * speedProp);
+
+            if(gamepad1.b) {
+
+                direct = Math.abs(gamepad1.left_stick_x) / gamepad1.left_stick_x;
+                // setPower(cfm_power)
+                drive.fl.setPower(cfm_power * direct);
+                drive.fr.setPower(-cfm_power * direct);
+                drive.bl.setPower(-cfm_power * direct);
+                drive.br.setPower(cfm_power * direct);
         }
-        else if(cfmToggle && Math.abs(gamepad1.left_stick_x) > .05)
-        {
 
-            direct = Math.abs(gamepad1.left_stick_x)/gamepad1.left_stick_x;
-            // setPower(cfm_power)
-            drive.fl.setPower(cfm_power * direct);
-            drive.fr.setPower(-cfm_power * direct);
-            drive.bl.setPower(-cfm_power * direct);
-            drive.br.setPower(cfm_power * direct);
-        }
-
-
-
+        telemetry.update();
     }
 }

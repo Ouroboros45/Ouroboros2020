@@ -26,7 +26,7 @@ public class TeleOpMecanum extends OpMode {
     double direction;
     double velocity;
     double speed;
-    double speedProp;
+    double speedProp = 1.0;
     boolean halfTrue = false;
     boolean cfmToggle = false;
     double direct = 1.0;
