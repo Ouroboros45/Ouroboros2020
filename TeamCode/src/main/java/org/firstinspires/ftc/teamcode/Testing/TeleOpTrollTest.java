@@ -25,6 +25,8 @@ public class TeleOpTrollTest extends OpMode {
     boolean halfTrue = false;
     boolean cfmToggle = false;
     double direct = 1.0;
+    boolean pastDPadUp = false;
+    boolean pastDPadDown = false;
 
     //  Variables for Cruise Foundation Moving (CFM)
 
@@ -119,17 +121,17 @@ public class TeleOpTrollTest extends OpMode {
         //Takes into account the mass of the foundation and block stack
         //and the friction of the floor
 
-        if (gamepad2.dpad_up) {
-            while(gamepad1.dpad_down)
-            {
+        if (gamepad2.dpad_up != pastDPadUp) {
+            pastDPadUp = gamepad2.dpad_up;
+            if (gamepad2.dpad_up) {
+                numberStackedBlocks++;
             }
-            numberStackedBlocks++;
         }
         else if (gamepad2.dpad_down) {
-            while(gamepad1.dpad_down)
-            {
+            pastDPadDown = gamepad2.dpad_down;
+            if (gamepad2.dpad_down) {
+                numberStackedBlocks--;
             }
-            numberStackedBlocks--;
         }
 
         //  Mass of Whole Object
@@ -197,20 +199,22 @@ public class TeleOpTrollTest extends OpMode {
         }
         telemetry.addData("CFM Power : ", cfm_power);
 
-        if(gamepad1.dpad_right)
+        if(gamepad1.dpad_left)
         {
             drive.fl.setPower(1);
             drive.fr.setPower(-1);
             drive.bl.setPower(-1);
             drive.br.setPower(1);
         }
-        if(gamepad1.dpad_left)
+        if(gamepad1.dpad_right)
         {
             drive.fl.setPower(-1);
             drive.fr.setPower(1);
             drive.bl.setPower(1);
             drive.br.setPower(-1);
         }
+
+        telemetry.addData("Encoded Acceleration", drive.getEncodedAccel(.02/90));
         telemetry.update();
     }
 }

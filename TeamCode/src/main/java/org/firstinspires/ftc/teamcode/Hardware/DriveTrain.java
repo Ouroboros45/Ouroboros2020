@@ -50,10 +50,10 @@ public class DriveTrain {
         br.setDirection(DcMotor.Direction.FORWARD);
 
         //Set Power For Static Motors - When Robot Not Moving
-        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        fl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fr.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bl.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        br.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
 
@@ -209,6 +209,41 @@ public class DriveTrain {
         fl.setPower(0);
         br.setPower(0);
         bl.setPower(0);
+    }
+
+    public double getEncodedAccel (double kD) {
+        runtime.reset();
+
+        double position;
+        double time;
+        double prevPosition;
+        double prevTime;
+        double prevNewTime;
+        boolean active = true;
+        double prevAccel;
+        double accel;
+        double masterAccel;
+
+        prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
+                + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
+        prevTime = runtime.milliseconds();
+        time = runtime.milliseconds();
+        position = (fl.getCurrentPosition() + fr.getCurrentPosition()
+                + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
+
+        prevAccel = ((position - prevError) / (time - prevTime)) * kD;
+
+        prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
+                + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
+        prevNewTime = runtime.milliseconds();
+        time = runtime.milliseconds();
+        position = (fl.getCurrentPosition() + fr.getCurrentPosition()
+                + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
+
+        accel = ((position - prevError) / (time - prevNewTime)) * kD;
+
+        masterAccel =  ((accel - prevAccel) / (time - prevTime)) * kD;
+        return masterAccel;
     }
 
 }
