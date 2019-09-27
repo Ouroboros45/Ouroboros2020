@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Testing;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.DriveTrain;
 public class TeleOpTrollTest extends OpMode {
 
     DriveTrain drive = new DriveTrain();
+
 
     //Instantiate Variables
 
@@ -30,6 +32,8 @@ public class TeleOpTrollTest extends OpMode {
 
     //  Variables for Cruise Foundation Moving (CFM)
 
+    ElapsedTime cfmTime = new ElapsedTime();
+
     private static final double  massFoundation = 1.905; // Mass in kg
     private static final double massStone = .1882;
     static final double muBlocks = .78;
@@ -39,7 +43,9 @@ public class TeleOpTrollTest extends OpMode {
     double mass = 0.0;
     double foundationFriction = 0.0;
     double maxCFM_Velocity = 0.0;
+    double maxCFM_Acceleration = 0.0;
     double CFM_AungularVelocity = 0.0;
+    double CFM_Velocity = 0.0;
     double cfm_power = 0.0;
 
     int numberStackedBlocks = 0;
@@ -127,32 +133,28 @@ public class TeleOpTrollTest extends OpMode {
         //Takes into account the mass of the foundation and block stack
         //and the friction of the floor
 
+        //  Counter Assumes Each Layer is 2 blocks
+
         if (gamepad2.dpad_up != pastDPadUp) {
             pastDPadUp = gamepad2.dpad_up;
             if (gamepad2.dpad_up) {
-                numberStackedBlocks++;
+                numberStackedBlocks += 2;
             }
         }
         else if (gamepad2.dpad_down != pastDPadDown) {
             pastDPadDown = gamepad2.dpad_down;
             if (gamepad2.dpad_down) {
-                numberStackedBlocks--;
+                numberStackedBlocks -= 2;
             }
         }
 
         //  Mass of Whole Object
         mass = massFoundation + numberStackedBlocks * massStone;
 
-        //  Max CFM velocity, calculated
-        maxCFM_Velocity = fix * Math.sqrt((2 * tolerance * 9.81 * massStone * numberStackedBlocks * muBlocks)
-                / mass);
+        //  Max CFM Acceleration, calculated
 
-        //  CFM velocity to Aungular Velocity
-        CFM_AungularVelocity = maxCFM_Velocity / (DriveTrain.wheelDiam / 2);
+        maxCFM_Acceleration = 9.81 * muBlocks * massStone * numberStackedBlocks / mass;
 
-        //  Power to set motors to follow CFM velocity.
-        cfm_power = (-1) * (DriveTrain.stallTorque / DriveTrain.noLoadSpeed) * CFM_AungularVelocity
-                + DriveTrain.stallTorque * CFM_AungularVelocity;
 
         telemetry.addData("Number of Blocks : ", numberStackedBlocks);
 
@@ -195,6 +197,22 @@ public class TeleOpTrollTest extends OpMode {
         }
         else if(cfmToggle)
         {
+            //  Max CFM velocity, calculated
+            maxCFM_Velocity = fix * Math.sqrt((2 * tolerance * 9.81 * massStone * numberStackedBlocks * muBlocks)
+                    / mass);
+
+            if(CFM_Velocity <= maxCFM_Velocity)
+            {
+                CFM_Velocity = maxCFM_Velocity * cfmTime.seconds();
+            }
+
+            //  CFM velocity to Aungular Velocitys
+            CFM_AungularVelocity = CFM_Velocity / (DriveTrain.wheelDiam / 2);
+
+            //  Power to set motors to follow CFM velocity.
+            cfm_power = (-1) * (DriveTrain.stallTorque / DriveTrain.noLoadSpeed) * CFM_AungularVelocity
+                    + DriveTrain.stallTorque * CFM_AungularVelocity;
+
 
             if (gamepad1.left_stick_x > 0.5) {
                 direct = 1;
@@ -206,6 +224,8 @@ public class TeleOpTrollTest extends OpMode {
 
             else {
                 direct = 0;
+                cfmTime.reset();
+                CFM_Velocity = 0;
             }
 
             drive.fl.setPower(-cfm_power * direct);
