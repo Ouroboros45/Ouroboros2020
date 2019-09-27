@@ -231,7 +231,7 @@ public class TeleOpTrollTest extends OpMode {
         }
 
         telemetry.addData("Halfing Speed : ", pastX);
-        telemetry.addData("Encoded Acceleration : ", drive.getEncodedAccel(.22/90));
+        telemetry.addData("Encoded Acceleration : ", drive.getEncodedAccel());
         telemetry.update();
     }
 }

@@ -222,7 +222,7 @@ public class DriveTrain {
         bl.setPower(0);
     }
 
-    public double getEncodedAccel (double kD) {
+    public double getEncodedAccel () {
         runtime.reset();
 
         prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
@@ -232,7 +232,7 @@ public class DriveTrain {
         position = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
 
-        prevAccel = ((position - prevPosition) / (time_ea - prevTime_ea)) * kD;
+        prevAccel = ((position - prevPosition) / (time_ea - prevTime_ea));
 
         prevPosition = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
@@ -241,9 +241,9 @@ public class DriveTrain {
         position = (fl.getCurrentPosition() + fr.getCurrentPosition()
                 + br.getCurrentPosition() + bl.getCurrentPosition()) / 4;
 
-        accel = ((position - prevPosition) / (time_ea - prevNewTime)) * kD;
+        accel = ((position - prevPosition) / (time_ea - prevNewTime));
 
-        masterAccel =  ((accel - prevAccel) / (time_ea - prevTime_ea)) * -kD;
+        masterAccel =  Math.abs(((accel - prevAccel) / (time_ea - prevTime_ea)));
         return masterAccel;
     }
 
