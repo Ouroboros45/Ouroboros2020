@@ -30,6 +30,9 @@ public class TeleOpTrollTest extends OpMode {
     boolean pastDPadUp = false;
     boolean pastDPadDown = false;
 
+    double flMod = 0;
+    double frMod = 0;
+
     //  Variables for Cruise Foundation Moving (CFM)
 
     ElapsedTime cfmTime = new ElapsedTime();
@@ -228,10 +231,30 @@ public class TeleOpTrollTest extends OpMode {
                 CFM_Velocity = 0;
             }
 
-            drive.fl.setPower(-cfm_power * direct);
-            drive.fr.setPower(cfm_power * direct);
+            drive.fl.setPower(-cfm_power * direct + flMod);
+            drive.fr.setPower(cfm_power * direct + frMod);
             drive.bl.setPower(cfm_power * direct);
             drive.br.setPower(-cfm_power * direct);
+
+            if(drive.getHolon(drive.fl) > drive.getHolon(drive.br) + 0.25 ||
+                drive.getHolon(drive.fl) < drive.getHolon(drive.br) - 0.25) {
+                if (drive.getHolon(drive.fl) > drive.getHolon(drive.br) + 0.25) {
+                    flMod = flMod - 0.25;
+                }
+                else {
+                    flMod = flMod + 0.25;
+                }
+            }
+
+            if (drive.getHolon(drive.fr) > drive.getHolon(drive.bl) + 0.25 ||
+            drive.getHolon(drive.fr) < drive.getHolon(drive.bl) - 0.25) {
+                if (drive.getHolon(drive.fr) > drive.getHolon(drive.bl) + 0.25) {
+                    frMod = frMod - 0.25;
+                }
+                else {
+                    frMod = frMod + 0.25;
+                }
+            }
         }
         telemetry.addData("CFM Power : ", cfm_power);
 
@@ -252,6 +275,11 @@ public class TeleOpTrollTest extends OpMode {
 
         telemetry.addData("Halfing Speed : ", pastX);
         telemetry.addData("Encoded Acceleration : ", drive.getEncodedAccel());
+        telemetry.addData("Get Holon : ",
+                " FL: " + drive.getHolon(drive.fl) +
+                        "FR :" + drive.getHolon(drive.fr) +
+                     "BL : " + drive.getHolon(drive.bl) +
+                        "BR : " + drive.getHolon(drive.br));
         telemetry.update();
     }
 }

@@ -41,6 +41,9 @@ public class DriveTrain {
     double prevAccel;
     double accel;
     double masterAccel;
+    private double secondPrevPosition;
+    private double secondTime;
+    private double secondPosition;
 
 
     public void initDriveTrain(LinearOpMode opMode) {
@@ -108,11 +111,10 @@ public class DriveTrain {
         opMode.telemetry.update();
     }
 
-    public void encoderDrive(double speed,
+    /*public void encoderDrive(double speed,
                              double leftBlinches, double leftInches, double rightInches, double rightBlinches,
                              double timeoutS) {
 
-        double headingTarget = sensors.getGyroYaw();
 
         int newLeftTarget;
         int newRightTarget;
@@ -168,7 +170,7 @@ public class DriveTrain {
             opMode.sleep(50);
         }
 
-    }
+    }*/
 
     public void runEncoders() {
         fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -246,5 +248,198 @@ public class DriveTrain {
         masterAccel =  Math.abs(((accel - prevAccel) / (time_ea - prevTime_ea)));
         return masterAccel;
     }
+
+    public double getHolon (DcMotor motor) {
+        runtime.reset();
+
+        prevPosition = motor.getCurrentPosition();
+        prevTime = runtime.milliseconds();
+        time = runtime.milliseconds();
+        position = motor.getCurrentPosition();
+
+        secondPrevPosition = motor.getCurrentPosition();
+        prevNewTime = runtime.milliseconds();
+        secondTime = runtime.milliseconds();
+        secondPosition = motor.getCurrentPosition();
+
+        masterAccel =  (((secondPosition - secondPrevPosition) * (time - prevTime) + (prevPosition - position) * (secondTime - prevNewTime)) / (runtime.milliseconds() - prevTime) * (secondTime -
+                prevNewTime) * (time - prevTime)) ;
+        return masterAccel;
+    }
+
+    public void encoderBase (double speed, int leftFront, int rightFront, int leftBack, int rightBack, double timeoutS) {
+        fl.setTargetPosition(leftFront);
+        fr.setTargetPosition(rightFront);
+        bl.setTargetPosition(leftBack);
+        br.setTargetPosition(rightBack);
+
+        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+
+        fl.setPower(Math.abs(speed));
+        fr.setPower(Math.abs(speed));
+        bl.setPower(Math.abs(speed));
+        br.setPower(Math.abs(speed));
+
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                (bl.isBusy() && br.isBusy())) {
+
+            //opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            //opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+            // fl.getCurrentPosition(),
+            //  fr.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.sleep(50);
+    }
+
+    public void encoderStrafe(boolean isRight, double speed,
+                              int leftInches, int rightInches,
+                              int timeoutS) {
+
+        int newLeftTarget = 0;
+        int newRightTarget = 0;
+        int newRightBlarget = 0;
+        int newLeftBlarget = 0;
+
+        if (isRight) {
+            if (opMode.opModeIsActive()) {
+                newLeftTarget = fl.getCurrentPosition() + (int) (leftInches * inchCounts);
+                newRightTarget = fr.getCurrentPosition() + (int) (rightInches * inchCounts);
+                newLeftBlarget = bl.getCurrentPosition() + (int) (-leftInches * inchCounts);
+                newRightBlarget = br.getCurrentPosition() + (int) (-rightInches * inchCounts);
+            }
+
+        }
+
+        else {
+            if (opMode.opModeIsActive()) {
+                newLeftTarget = fl.getCurrentPosition() + (int) (-leftInches * inchCounts);
+                newRightTarget = fr.getCurrentPosition() + (int) (-rightInches * inchCounts);
+                newLeftBlarget = bl.getCurrentPosition() + (int) (leftInches * inchCounts);
+                newRightBlarget = br.getCurrentPosition() + (int) (rightInches * inchCounts);
+            }
+        }
+        fl.setTargetPosition(newLeftTarget);
+        fr.setTargetPosition(newRightTarget);
+        bl.setTargetPosition(newLeftBlarget);
+        br.setTargetPosition(newRightBlarget);
+
+        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+
+        fl.setPower(Math.abs(speed));
+        fr.setPower(Math.abs(speed));
+        bl.setPower(Math.abs(speed));
+        br.setPower(Math.abs(speed));
+
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                (bl.isBusy() && br.isBusy())) {
+
+            //opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            //opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+            // fl.getCurrentPosition(),
+            //  fr.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.sleep(50);
+
+    }
+
+    public void encoderDrive(double speed,
+                             int leftInches, int rightInches,
+                             int timeoutS) {
+
+        double newLeftTarget = 0;
+        double newRightTarget = 0;
+        double newRightBlarget = 0;
+        double newLeftBlarget = 0;
+
+        if (opMode.opModeIsActive()) {
+            newLeftTarget = fl.getCurrentPosition() +  (leftInches * inchCounts);
+            newRightTarget = fr.getCurrentPosition() + (rightInches * inchCounts);
+            newLeftBlarget = bl.getCurrentPosition() +  (leftInches * inchCounts);
+            newRightBlarget = br.getCurrentPosition() +  (rightInches * inchCounts);
+        }
+
+        fl.setTargetPosition((int)newLeftTarget);
+        fr.setTargetPosition((int)newLeftBlarget);
+        bl.setTargetPosition((int)newRightTarget);
+        br.setTargetPosition((int)newRightBlarget);
+
+        fl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        fr.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        bl.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        br.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        runtime.reset();
+
+        fl.setPower(Math.abs(speed));
+        fr.setPower(Math.abs(speed));
+        bl.setPower(Math.abs(speed));
+        br.setPower(Math.abs(speed));
+
+
+        while (opMode.opModeIsActive() &&
+                (runtime.seconds() < timeoutS) &&
+                (bl.isBusy() && br.isBusy())) {
+
+            //opMode.telemetry.addData("Path1", "Running to %7d :%7d", newLeftTarget, newRightTarget);
+            //opMode.telemetry.addData("Path2", "Running at %7d :%7d",
+            // fl.getCurrentPosition(),
+            //  fr.getCurrentPosition());
+
+            opMode.telemetry.update();
+        }
+
+        fl.setPower(0);
+        fr.setPower(0);
+        bl.setPower(0);
+        br.setPower(0);
+
+        fl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        fr.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        bl.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        br.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        opMode.sleep(50);
+    }
+
 
 }
